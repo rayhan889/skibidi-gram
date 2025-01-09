@@ -19,12 +19,12 @@ export default async function Home() {
     <section className='container mx-auto h-screen max-w-screen-2xl'>
       <div className='grid h-screen grid-cols-3 gap-4'>
         <section className='hidden h-full w-full lg:block'>Left</section>
-        <section className='col-span-3 flex h-full w-full flex-col border border-slate-200 md:columns-2 lg:col-span-1'>
+        <section className='col-span-3 flex h-full w-full flex-col border border-slate-800 md:columns-2 lg:col-span-1'>
           <div className='py-3'>
             {memes.map((meme, index) => (
               <div
                 key={index}
-                className='flex w-full gap-x-2 border-b border-b-slate-200 p-3'
+                className='flex w-full gap-x-2 border-b border-b-slate-800 p-3'
               >
                 <Avatar className='mt-[0.3rem]'>
                   <AvatarImage src='https://github.com/shadcn.png' />
@@ -36,11 +36,11 @@ export default async function Home() {
                       <div className='flex items-center gap-x-2'>
                         <h4 className='font-bold'>{meme.users?.name}</h4>
                         <span className='h-1 w-1 rounded-full bg-gray-400'></span>
-                        <span className='text-sm text-gray-700'>
+                        <span className='text-sm text-zinc-500'>
                           15 hours ago
                         </span>
                       </div>
-                      <span className='text-gray-700'>{meme.memes.title}</span>
+                      <span>{meme.memes.title}</span>
                     </div>
                     {/* Actions */}
                   </div>
