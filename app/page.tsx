@@ -1,20 +1,19 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+'use server'
 
-export default function Home() {
-  const mockData = [
-    {
-      id: 1,
-      title: 'Meme 1',
-      username: 'Reynard',
-      body: 'https://utfs.io/f/kMVf4fq06TC3VzGWUlYOM0zl671Eog5kw4njLcT2pAtIySZC'
-    },
-    {
-      id: 2,
-      title: '🙀',
-      username: 'John',
-      body: 'https://utfs.io/f/kMVf4fq06TC3dS1vWiFHtvMVeTj18Qshlid93fbD2KgucPNW'
-    }
-  ]
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { getMemes } from '@/lib/queries/memes'
+import { type memeSelectSchemaType } from '@/zod-schemas/meme'
+import { type userSelectSchemaType } from '@/zod-schemas/user'
+
+type MemeWithUser = {
+  memes: memeSelectSchemaType
+  users: userSelectSchemaType
+}
+
+export default async function Home() {
+  const memes: MemeWithUser[] = await getMemes()
+
+  if (!memes) return <div>Loading...</div>
 
   return (
     <section className='container mx-auto h-screen max-w-screen-2xl'>
@@ -22,7 +21,7 @@ export default function Home() {
         <section className='hidden h-full w-full lg:block'>Left</section>
         <section className='col-span-3 flex h-full w-full flex-col border border-slate-200 md:columns-2 lg:col-span-1'>
           <div className='py-3'>
-            {[...mockData, ...mockData, ...mockData].map((meme, index) => (
+            {memes.map((meme, index) => (
               <div
                 key={index}
                 className='flex w-full gap-x-2 border-b border-b-slate-200 p-3'
@@ -35,19 +34,19 @@ export default function Home() {
                   <div className='flex items-center justify-between'>
                     <div className='block'>
                       <div className='flex items-center gap-x-2'>
-                        <h4 className='font-bold'>{meme.username}</h4>
+                        <h4 className='font-bold'>{meme.users?.name}</h4>
                         <span className='h-1 w-1 rounded-full bg-gray-400'></span>
                         <span className='text-sm text-gray-700'>
                           15 hours ago
                         </span>
                       </div>
-                      <span className='text-gray-700'>{meme.title}</span>
+                      <span className='text-gray-700'>{meme.memes.title}</span>
                     </div>
                     {/* Actions */}
                   </div>
                   <img
-                    src={meme.body}
-                    alt={meme.username}
+                    src={meme.memes.body}
+                    alt={meme.memes.title}
                     className='h-full max-h-[20rem] w-full rounded-md object-cover'
                   />
                 </div>
