@@ -1,8 +1,11 @@
-import { pgTable, serial, varchar, timestamp } from 'drizzle-orm/pg-core'
+import { pgTable, varchar, timestamp } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
+import crypto from 'crypto'
 
 export const users = pgTable('users', {
-  id: serial('id').primaryKey(),
+  id: varchar('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   name: varchar('name').notNull(),
   email: varchar('email').notNull().unique(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -13,7 +16,9 @@ export const users = pgTable('users', {
 })
 
 export const memes = pgTable('memes', {
-  id: serial('id').primaryKey(),
+  id: varchar('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   userId: varchar('user_id')
     .notNull()
     .references(() => users.id),
