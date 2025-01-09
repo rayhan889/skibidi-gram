@@ -23,8 +23,10 @@ sleek and seamless user experience.
 - [x] Connect to a PostgreSQL database with Drizzle and Neon.
 - [x] Create 2 essential schemas (users and memes).
 - [x] Populate the database with mock data for users and memes.
-- [ ] Design the main screen.
-- [ ] Display mock data on the main screen.
+- [x] Design the main screen.
+- [x] Display mock data on the main screen.
+- [ ] Fetch the actual data from the database.
+- [ ] Create a new meme functionality.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with
 [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
