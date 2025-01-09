@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx ./db/migrate.ts",
+    "db:drop": "drizzle-kit drop"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
