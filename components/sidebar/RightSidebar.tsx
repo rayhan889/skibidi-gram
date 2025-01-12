@@ -1,5 +1,9 @@
 import React from 'react'
 
 export const RightSidebar = () => {
-  return <section className='hidden h-full w-full md:block'>Right</section>
+  return (
+    <div className='flex flex-col items-start p-4'>
+      <div className='flex w-1/2 flex-col items-center'>Right</div>
+    </div>
+  )
 }

@@ -16,7 +16,7 @@ export default async function MemeLists() {
   if (!memes) return <div>Loading...</div>
 
   return (
-    <section className='col-span-3 flex h-full w-full flex-col border border-zinc-300 dark:border-zinc-800 md:columns-2 lg:col-span-1'>
+    <section className='col-span-3 flex h-full w-full flex-col border border-t-0 border-zinc-300 dark:border-zinc-800 md:columns-2 lg:col-span-1'>
       <div className='py-3'>
         {memes.map((meme, index) => (
           <div
