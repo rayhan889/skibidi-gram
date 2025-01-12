@@ -16,12 +16,12 @@ export default async function MemeLists() {
   if (!memes) return <div>Loading...</div>
 
   return (
-    <section className='col-span-3 flex h-full w-full flex-col border border-slate-800 md:columns-2 lg:col-span-1'>
+    <section className='col-span-3 flex h-full w-full flex-col border border-zinc-300 dark:border-zinc-800 md:columns-2 lg:col-span-1'>
       <div className='py-3'>
         {memes.map((meme, index) => (
           <div
             key={index}
-            className='flex w-full gap-x-2 border-b border-b-slate-800 p-3'
+            className='flex w-full gap-x-2 border-b border-zinc-300 p-3 dark:border-b-zinc-800'
           >
             <Avatar className='mt-[0.3rem]'>
               <AvatarImage src='https://github.com/shadcn.png' />

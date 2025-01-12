@@ -3,6 +3,7 @@ import { Poppins } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AuthProvider } from './AuthProvider'
+import { Topbar } from '@/components/Topbar'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -23,14 +24,18 @@ export default function RootLayout({
     <>
       <AuthProvider>
         <html lang='en' suppressHydrationWarning>
-          <body className={`${poppins.className} antialiased`}>
+          <body
+            className={`${poppins.className} min-h-screen bg-slate-50 antialiased dark:bg-zinc-900`}
+          >
             <ThemeProvider
               attribute='class'
               defaultTheme='dark'
               enableSystem
               disableTransitionOnChange
             >
-              {children}
+              <Topbar />
+
+              <main>{children}</main>
             </ThemeProvider>
           </body>
         </html>
