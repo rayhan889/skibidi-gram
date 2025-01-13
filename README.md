@@ -29,7 +29,9 @@ sleek and seamless user experience.
 - [x] Auth using Kinde.
 - [x] Create a topbar.
 - [x] Parallel routes.
-- [ ] Form setup.
+- [x] Form setup.
+- [x] Submit meme functionality(can't upload it into db yet).
+- [ ] Fix UI issues.
 - [ ] Create a new meme functionality.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with

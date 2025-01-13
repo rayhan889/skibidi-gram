@@ -64,3 +64,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+.hidden-input {
+  display: none;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* For Firefox, set scrollbar to none */
+.custom-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
