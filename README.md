@@ -28,6 +28,8 @@ sleek and seamless user experience.
 - [x] Fetch the actual data from the database.
 - [x] Auth using Kinde.
 - [x] Create a topbar.
+- [x] Parallel routes.
+- [ ] Form setup.
 - [ ] Create a new meme functionality.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with
