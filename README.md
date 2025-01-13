@@ -26,6 +26,8 @@ sleek and seamless user experience.
 - [x] Design the main screen.
 - [x] Display mock data on the main screen.
 - [x] Fetch the actual data from the database.
+- [x] Auth using Kinde.
+- [x] Create a topbar.
 - [ ] Create a new meme functionality.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with

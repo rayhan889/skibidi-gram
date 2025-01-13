@@ -5,7 +5,7 @@ import { RightSidebar } from '@/components/sidebar/RightSidebar'
 export default function Home() {
   return (
     <section className='container mx-auto max-w-screen-2xl'>
-      <div className='mt-20 grid grid-cols-3 gap-4'>
+      <div className='grid grid-cols-3 gap-4'>
         <LeftSidebar />
         <MemeLists />
         <RightSidebar />

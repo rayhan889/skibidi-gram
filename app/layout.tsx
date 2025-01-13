@@ -35,7 +35,7 @@ export default function RootLayout({
             >
               <Topbar />
 
-              <main>{children}</main>
+              <main className='mt-20'>{children}</main>
             </ThemeProvider>
           </body>
         </html>
