@@ -1,5 +1,5 @@
-import Home from './home/page'
+import MemeLists from '@/app/home/MemeLists'
 
 export default async function App() {
-  return <Home />
+  return <MemeLists />
 }

@@ -7,7 +7,7 @@ export default async function MemeFormPage() {
   const user = await getUser()
 
   return (
-    <section className='container mx-auto max-w-screen-sm px-4 md:px-0'>
+    <section className='p-3'>
       <h1>Meme Form Page</h1>
       <MemeForm user={user} />
     </section>
