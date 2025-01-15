@@ -6,8 +6,12 @@ export const users = pgTable('users', {
   id: varchar('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  name: varchar('name').notNull(),
+  firstName: varchar('first_name').notNull(),
+  lastName: varchar('last_name').notNull(),
   email: varchar('email').notNull().unique(),
+  picture: varchar('picture').notNull(),
+  username: varchar('username').notNull(),
+  phone: varchar('phone'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at')
     .notNull()
