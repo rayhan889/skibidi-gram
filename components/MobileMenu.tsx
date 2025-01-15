@@ -1,11 +1,10 @@
 'use client'
 
-import { LogoutLink, LoginLink } from '@kinde-oss/kinde-auth-nextjs/components'
 import Link from 'next/link'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { FiHome, FiPlus } from 'react-icons/fi'
 import { HiOutlineMenuAlt2 } from 'react-icons/hi'
 import { useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 import { Button, buttonVariants } from '@/components/ui/button'
 import { ModeToggle } from '@/components/ModeToggle'
@@ -18,18 +17,14 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export const MobileMenu = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const { data: session } = useSession()
 
-  const { isAuthenticated: isUserAuthenticated, getUser } =
-    useKindeBrowserClient()
-  const user = getUser()
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   let initial
   let truncatedUserEmail
 
-  if (isUserAuthenticated) {
-    initial = user?.username?.match(/[A-Z]/g)?.join('')
-    truncatedUserEmail = user?.email?.slice(0, 13) + '...'
+  if (true) {
   }
 
   return (
@@ -61,13 +56,13 @@ export const MobileMenu = () => {
             <div className='mr-2'>
               <ModeToggle />
             </div>
-            {isUserAuthenticated ? (
+            {session && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className='h-8 w-8 cursor-pointer'>
                     <AvatarImage
-                      src={user?.picture ?? ''}
-                      alt={user?.username ?? ''}
+                      src={session.user.image!}
+                      alt={session.user.username!}
                     />
                     <AvatarFallback>{initial}</AvatarFallback>
                   </Avatar>
@@ -76,33 +71,22 @@ export const MobileMenu = () => {
                   <div className='flex items-center px-3'>
                     <Avatar>
                       <AvatarImage
-                        src={user?.picture ?? ''}
-                        alt={user?.username ?? ''}
+                        src={session.user.image!}
+                        alt={session.user.username!}
                       />
                       <AvatarFallback>{initial}</AvatarFallback>
                     </Avatar>
                     <div className='block p-4'>
-                      <h3 className='font-medium'>{user?.given_name}</h3>
+                      <h3 className='font-medium'>{session.user.name}</h3>
                       <span className='text-sm text-zinc-500'>
                         {truncatedUserEmail}
                       </span>
                     </div>
                   </div>
                   <DropdownMenuSeparator />
-                  <Button variant={'ghost'} className='flex w-full'>
-                    <LogoutLink
-                      postLogoutRedirectURL='/'
-                      className='w-full text-start'
-                    >
-                      Logout
-                    </LogoutLink>
-                  </Button>
+                  {/* Logout Button */}
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
-              <Button variant={'ghost'}>
-                <LoginLink>Login</LoginLink>
-              </Button>
             )}
           </div>
         </div>
@@ -120,6 +104,14 @@ export const MobileMenu = () => {
               >
                 <FiHome />
                 Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={'/sigin'}
+                className={`${buttonVariants({ variant: 'ghost', className: 'flex w-full items-center' })}`}
+              >
+                Sign In
               </Link>
             </li>
           </ul>

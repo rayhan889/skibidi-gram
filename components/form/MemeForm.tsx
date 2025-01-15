@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { type memeInsertSchemaType, memeInsertSchema } from '@/zod-schemas/meme'
 import { FiUploadCloud } from 'react-icons/fi'
 import { useDropzone } from 'react-dropzone'
-import { type KindeUser } from '@kinde-oss/kinde-auth-nextjs/types'
 
 import {
   Form,
@@ -19,11 +18,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
-export default function MemeForm({
-  user
-}: {
-  user: KindeUser<Record<string, any>>
-}) {
+export default function MemeForm({ user }: { user: any }) {
   const [preview, setPreview] = useState<string | ArrayBuffer | null>('')
 
   const defaultValues: memeInsertSchemaType = {
