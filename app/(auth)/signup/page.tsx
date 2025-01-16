@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 
-export default function Signin() {
+export default function Signup() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const loginWithGoogle = async () => {
@@ -44,12 +44,12 @@ export default function Signin() {
         </Button>
       </div>
       <p className='px-8 text-center text-sm text-muted-foreground'>
-        New to Skibidi Gram?{' '}
+        Already have an account?{' '}
         <Link
-          href='/signup'
+          href='/signin'
           className='hover:text-brand text-sm underline underline-offset-4'
         >
-          Sign Up
+          Sign In
         </Link>
       </p>
     </div>

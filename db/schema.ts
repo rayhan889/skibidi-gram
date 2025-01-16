@@ -10,13 +10,13 @@ import { relations } from 'drizzle-orm'
 import crypto from 'crypto'
 import type { AdapterAccount } from 'next-auth/adapters'
 
-export const users = pgTable('users', {
-  id: varchar('id')
+export const users = pgTable('user', {
+  id: text('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  name: varchar('name').notNull(),
-  username: varchar('username').unique().notNull(),
-  email: varchar('email').unique().notNull(),
+  name: text('name'),
+  username: varchar('username').unique(),
+  email: text('email').unique(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -27,21 +27,21 @@ export const users = pgTable('users', {
 })
 
 export const accounts = pgTable(
-  'accounts',
+  'account',
   {
-    userId: varchar('user_id')
+    userId: text('userId')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
-    type: varchar('type').$type<AdapterAccount>().notNull(),
-    provider: varchar('provider').notNull(),
-    providerAccountId: varchar('providerAccountId').notNull(),
-    refresh_token: varchar('refresh_token'),
-    access_token: varchar('access_token'),
+    type: text('type').$type<AdapterAccount>().notNull(),
+    provider: text('provider').notNull(),
+    providerAccountId: text('providerAccountId').notNull(),
+    refresh_token: text('refresh_token'),
+    access_token: text('access_token'),
     expires_at: integer('expires_at'),
-    token_type: varchar('token_type'),
-    scope: varchar('scope'),
-    id_token: varchar('id_token'),
-    session_state: varchar('session_state')
+    token_type: text('token_type'),
+    scope: text('scope'),
+    id_token: text('id_token'),
+    session_state: text('session_state')
   },
   account => [
     {
@@ -52,23 +52,23 @@ export const accounts = pgTable(
   ]
 )
 
-export const sessions = pgTable('sessions', {
-  sessionToken: varchar('session_token').primaryKey(),
-  userId: varchar('user_id')
+export const sessions = pgTable('session', {
+  sessionToken: text('sessionToken').primaryKey(),
+  userId: text('userId')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   expires: timestamp('expires', { mode: 'date' }).notNull()
 })
 
 export const memes = pgTable('memes', {
-  id: varchar('id')
+  id: text('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  userId: varchar('user_id')
+  userId: text('userId')
     .notNull()
     .references(() => users.id),
   title: varchar('title').notNull(),
-  body: varchar('body').notNull(),
+  body: text('body').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at')
     .notNull()

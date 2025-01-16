@@ -34,7 +34,8 @@ sleek and seamless user experience.
 - [x] Fix UI issues.
 - [x] Sidebar for mobile device.
 - [x] Setting up new db schema.
-- [ ] Config next-auth.
+- [x] Config next-auth.
+- [x] Sign in and Sign up pages.
 - [ ] Create a new meme functionality.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with

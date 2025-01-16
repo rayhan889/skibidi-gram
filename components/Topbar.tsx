@@ -4,8 +4,9 @@ import React from 'react'
 import Link from 'next/link'
 import { FiMenu, FiPlus } from 'react-icons/fi'
 import { useSession } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
 
-import { buttonVariants } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { ModeToggle } from '@/components/ModeToggle'
 import {
   DropdownMenu,
@@ -20,9 +21,6 @@ export const Topbar = () => {
 
   let initial
   let truncatedUserEmail
-
-  if (true) {
-  }
 
   return (
     <nav className='fixed left-0 right-0 top-0 z-50 hidden h-20 items-center justify-between border-b border-zinc-300 bg-white/75 shadow-sm backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/75 lg:flex'>
@@ -85,7 +83,13 @@ export const Topbar = () => {
                   </div>
                 </div>
                 <DropdownMenuSeparator />
-                {/* Logout Button */}
+                <Button
+                  variant={'ghost'}
+                  className='w-full text-start'
+                  onClick={() => signOut({ callbackUrl: '/signin' })}
+                >
+                  Logout
+                </Button>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
