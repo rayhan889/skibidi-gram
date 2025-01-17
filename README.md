@@ -37,6 +37,8 @@ sleek and seamless user experience.
 - [x] Config next-auth.
 - [x] Sign in and Sign up pages.
 - [x] Tidy up UI issues.
+- [x] Fix modal issue.
+- [x] Add session to some components.
 - [ ] Create a new meme functionality.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with
