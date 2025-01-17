@@ -22,6 +22,11 @@ export const Topbar = () => {
   let initial
   let truncatedUserEmail
 
+  if (session) {
+    initial = session.user.username?.match(/[A-Z]/g)?.join('')
+    truncatedUserEmail = session.user.email?.slice(0, 13) + '...'
+  }
+
   return (
     <nav className='fixed left-0 right-0 top-0 z-50 hidden h-20 items-center justify-between border-b border-zinc-300 bg-white/75 shadow-sm backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/75 lg:flex'>
       <div className='container mx-auto flex w-full max-w-7xl items-center justify-between'>
@@ -77,7 +82,7 @@ export const Topbar = () => {
                   </Avatar>
                   <div className='block p-4'>
                     <h3 className='font-medium'>{session.user.name}</h3>
-                    <span className='text-sm text-zinc-500'>
+                    <span className='text-sm text-muted-foreground'>
                       {truncatedUserEmail}
                     </span>
                   </div>
@@ -85,7 +90,7 @@ export const Topbar = () => {
                 <DropdownMenuSeparator />
                 <Button
                   variant={'ghost'}
-                  className='w-full text-start'
+                  className='flex w-full justify-start'
                   onClick={() => signOut({ callbackUrl: '/signin' })}
                 >
                   Logout

@@ -36,6 +36,7 @@ sleek and seamless user experience.
 - [x] Setting up new db schema.
 - [x] Config next-auth.
 - [x] Sign in and Sign up pages.
+- [x] Tidy up UI issues.
 - [ ] Create a new meme functionality.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with

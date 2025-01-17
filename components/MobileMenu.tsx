@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { FiHome, FiPlus } from 'react-icons/fi'
+import { FiBookmark, FiHome, FiPlus, FiSearch } from 'react-icons/fi'
 import { HiOutlineMenuAlt2 } from 'react-icons/hi'
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
@@ -17,14 +17,34 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export const MobileMenu = () => {
-  const { data: session } = useSession()
+  const navLinks = [
+    {
+      name: 'Home',
+      href: '/home',
+      icon: <FiHome />
+    },
+    {
+      name: 'Explore',
+      href: '/explore',
+      icon: <FiSearch />
+    },
+    {
+      name: 'Bookmarks',
+      href: '/bookmarks',
+      icon: <FiBookmark />
+    }
+  ]
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
+
+  const { data: session } = useSession()
 
   let initial
   let truncatedUserEmail
 
-  if (true) {
+  if (session) {
+    initial = session.user.username?.match(/[A-Z]/g)?.join('')
+    truncatedUserEmail = session.user.email?.slice(0, 13) + '...'
   }
 
   return (
@@ -96,24 +116,21 @@ export const MobileMenu = () => {
         className={`fixed left-0 top-0 z-50 mt-20 h-screen w-64 transition-transform md:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className='h-full overflow-y-auto bg-white/75 px-3 py-4 shadow-sm backdrop-blur-sm dark:bg-zinc-950/75'>
-          <ul className='space-y-2 px-2 font-medium'>
-            <li>
-              <Link
-                href={'/home'}
-                className={`${buttonVariants({ variant: 'ghost', className: 'flex w-full items-center' })}`}
-              >
-                <FiHome />
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                href={'/sigin'}
-                className={`${buttonVariants({ variant: 'ghost', className: 'flex w-full items-center' })}`}
-              >
-                Sign In
-              </Link>
-            </li>
+          <ul className='w-full space-y-4'>
+            {navLinks.map((link, idx) => (
+              <li key={idx}>
+                <Link
+                  href={link.href}
+                  style={{
+                    justifyContent: 'start'
+                  }}
+                  className={`${buttonVariants({ variant: 'ghost', className: 'flex w-full' })}`}
+                >
+                  {link.icon}
+                  {link.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </aside>
