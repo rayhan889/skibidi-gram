@@ -1,13 +1,24 @@
-import { pgTable, varchar, timestamp } from 'drizzle-orm/pg-core'
+import {
+  pgTable,
+  varchar,
+  timestamp,
+  text,
+  integer,
+  primaryKey
+} from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 import crypto from 'crypto'
+import type { AdapterAccount } from 'next-auth/adapters'
 
-export const users = pgTable('users', {
-  id: varchar('id')
+export const users = pgTable('user', {
+  id: text('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  name: varchar('name').notNull(),
-  email: varchar('email').notNull().unique(),
+  name: text('name'),
+  username: varchar('username').unique(),
+  email: text('email').unique(),
+  emailVerified: timestamp('emailVerified', { mode: 'date' }),
+  image: text('image'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at')
     .notNull()
@@ -15,15 +26,49 @@ export const users = pgTable('users', {
     .$onUpdate(() => new Date())
 })
 
+export const accounts = pgTable(
+  'account',
+  {
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    type: text('type').$type<AdapterAccount>().notNull(),
+    provider: text('provider').notNull(),
+    providerAccountId: text('providerAccountId').notNull(),
+    refresh_token: text('refresh_token'),
+    access_token: text('access_token'),
+    expires_at: integer('expires_at'),
+    token_type: text('token_type'),
+    scope: text('scope'),
+    id_token: text('id_token'),
+    session_state: text('session_state')
+  },
+  account => [
+    {
+      compoundKey: primaryKey({
+        columns: [account.provider, account.providerAccountId]
+      })
+    }
+  ]
+)
+
+export const sessions = pgTable('session', {
+  sessionToken: text('sessionToken').primaryKey(),
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  expires: timestamp('expires', { mode: 'date' }).notNull()
+})
+
 export const memes = pgTable('memes', {
-  id: varchar('id')
+  id: text('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  userId: varchar('user_id')
+  userId: text('userId')
     .notNull()
     .references(() => users.id),
   title: varchar('title').notNull(),
-  body: varchar('body').notNull(),
+  body: text('body').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at')
     .notNull()

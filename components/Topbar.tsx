@@ -1,8 +1,10 @@
+'use client'
+
 import React from 'react'
-import { LogoutLink, LoginLink } from '@kinde-oss/kinde-auth-nextjs/components'
 import Link from 'next/link'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import { FiMenu, FiPlus } from 'react-icons/fi'
+import { useSession } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
 
 import { Button, buttonVariants } from '@/components/ui/button'
 import { ModeToggle } from '@/components/ModeToggle'
@@ -14,21 +16,19 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
-export const Topbar = async () => {
-  const { isAuthenticated, getUser } = getKindeServerSession()
-  const isUserAuthenticated = await isAuthenticated()
-  const user = await getUser()
+export const Topbar = () => {
+  const { data: session } = useSession()
 
   let initial
   let truncatedUserEmail
 
-  if (isUserAuthenticated) {
-    initial = user.username?.match(/[A-Z]/g)?.join('')
-    truncatedUserEmail = user.email?.slice(0, 13) + '...'
+  if (session) {
+    initial = session.user.username?.match(/[A-Z]/g)?.join('')
+    truncatedUserEmail = session.user.email?.slice(0, 13) + '...'
   }
 
   return (
-    <nav className='fixed left-0 right-0 top-0 z-50 flex h-20 items-center justify-between border-b border-zinc-300 bg-white/75 shadow-sm backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/75'>
+    <nav className='fixed left-0 right-0 top-0 z-50 hidden h-20 items-center justify-between border-b border-zinc-300 bg-white/75 shadow-sm backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/75 lg:flex'>
       <div className='container mx-auto flex w-full max-w-7xl items-center justify-between'>
         <Link
           href='/'
@@ -60,13 +60,13 @@ export const Topbar = async () => {
           <div className='mr-2'>
             <ModeToggle />
           </div>
-          {isUserAuthenticated ? (
+          {session ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className='h-8 w-8 cursor-pointer'>
                   <AvatarImage
-                    src={user.picture ?? ''}
-                    alt={user.username ?? ''}
+                    src={session.user.image!}
+                    alt={session.user.username!}
                   />
                   <AvatarFallback>{initial}</AvatarFallback>
                 </Avatar>
@@ -75,33 +75,35 @@ export const Topbar = async () => {
                 <div className='flex items-center px-3'>
                   <Avatar>
                     <AvatarImage
-                      src={user.picture ?? ''}
-                      alt={user.username ?? ''}
+                      src={session.user.image!}
+                      alt={session.user.username!}
                     />
                     <AvatarFallback>{initial}</AvatarFallback>
                   </Avatar>
                   <div className='block p-4'>
-                    <h3 className='font-medium'>{user.given_name}</h3>
-                    <span className='text-sm text-zinc-500'>
+                    <h3 className='font-medium'>{session.user.name}</h3>
+                    <span className='text-sm text-muted-foreground'>
                       {truncatedUserEmail}
                     </span>
                   </div>
                 </div>
                 <DropdownMenuSeparator />
-                <Button variant={'ghost'} className='flex w-full'>
-                  <LogoutLink
-                    postLogoutRedirectURL='/'
-                    className='w-full text-start'
-                  >
-                    Logout
-                  </LogoutLink>
+                <Button
+                  variant={'ghost'}
+                  className='flex w-full justify-start'
+                  onClick={() => signOut({ callbackUrl: '/signin' })}
+                >
+                  Logout
                 </Button>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button variant={'ghost'}>
-              <LoginLink>Login</LoginLink>
-            </Button>
+            <Link
+              href={'/signin'}
+              className={`${buttonVariants({ variant: 'ghost' })}`}
+            >
+              Sign In
+            </Link>
           )}
         </div>
       </div>

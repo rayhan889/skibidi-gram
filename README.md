@@ -31,7 +31,14 @@ sleek and seamless user experience.
 - [x] Parallel routes.
 - [x] Form setup.
 - [x] Submit meme functionality(can't upload it into db yet).
-- [ ] Fix UI issues.
+- [x] Fix UI issues.
+- [x] Sidebar for mobile device.
+- [x] Setting up new db schema.
+- [x] Config next-auth.
+- [x] Sign in and Sign up pages.
+- [x] Tidy up UI issues.
+- [x] Fix modal issue.
+- [x] Add session to some components.
 - [ ] Create a new meme functionality.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with

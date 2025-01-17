@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import './globals.css'
-import { ThemeProvider } from '@/components/theme-provider'
-import { AuthProvider } from './AuthProvider'
-import { Topbar } from '@/components/Topbar'
+
+import { Providers } from '@/components/Providers'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -24,26 +23,13 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <AuthProvider>
-        <html lang='en' suppressHydrationWarning>
-          <body
-            className={`${poppins.className} min-h-screen bg-slate-50 antialiased dark:bg-zinc-900`}
-          >
-            <ThemeProvider
-              attribute='class'
-              defaultTheme='dark'
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Topbar />
-
-              <main className='mt-20'>{children}</main>
-              {modal}
-              <div id='modal-root' />
-            </ThemeProvider>
-          </body>
-        </html>
-      </AuthProvider>
+      <html lang='en' suppressHydrationWarning>
+        <body
+          className={`${poppins.className} min-h-screen bg-slate-50 antialiased dark:bg-zinc-900`}
+        >
+          <Providers>{children}</Providers>
+        </body>
+      </html>
     </>
   )
 }
