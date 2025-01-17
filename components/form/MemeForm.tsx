@@ -7,6 +7,7 @@ import { type memeInsertSchemaType, memeInsertSchema } from '@/zod-schemas/meme'
 import { FiUploadCloud } from 'react-icons/fi'
 import { useDropzone } from 'react-dropzone'
 import type { User } from 'next-auth'
+import { uploadFiles } from '@/lib/uploadthing'
 
 import {
   Form,
@@ -38,6 +39,19 @@ export default function MemeForm({
     defaultValues
   })
 
+  const onUploadFile = async (file: File[]) => {
+    const [res] = await uploadFiles('imageUploader', {
+      files: file
+    })
+
+    return {
+      success: 1,
+      file: {
+        url: res.url
+      }
+    }
+  }
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const reader = new FileReader()
@@ -46,6 +60,7 @@ export default function MemeForm({
         reader.readAsDataURL(acceptedFiles[0])
         form.setValue('body', acceptedFiles[0])
         form.clearErrors('body')
+        onUploadFile(acceptedFiles)
       } catch (error) {
         setPreview(null)
         form.resetField('body')
@@ -58,7 +73,7 @@ export default function MemeForm({
     useDropzone({
       onDrop,
       maxFiles: 1,
-      maxSize: 1000000, // 100MB
+      maxSize: 1000000, // 10MB
       accept: { 'image/*': ['.jpg', '.png', '.jpeg'] }
     })
 

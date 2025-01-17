@@ -39,6 +39,8 @@ sleek and seamless user experience.
 - [x] Tidy up UI issues.
 - [x] Fix modal issue.
 - [x] Add session to some components.
+- [x] Config uploadthing.
+- [ ] Db schema update - add file table.
 - [ ] Create a new meme functionality.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with
