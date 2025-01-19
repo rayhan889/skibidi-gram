@@ -40,7 +40,8 @@ sleek and seamless user experience.
 - [x] Fix modal issue.
 - [x] Add session to some components.
 - [x] Config uploadthing.
-- [ ] Db schema update - add file table.
+- [x] Db schema update - add file table.
+- [x] Meme create prep, useForm, typesafe, dropzone, multiple files.
 - [ ] Create a new meme functionality.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with
