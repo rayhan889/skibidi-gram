@@ -3,7 +3,11 @@ import { z } from 'zod'
 export const memeInsertSchema = z.object({
   title: z.string().min(1).max(100),
   files: z.array(
-    z.instanceof(File).refine(file => file.size !== 0, 'Please upload an image')
+    z.object({
+      fileName: z.string().min(1),
+      fileType: z.string().min(1),
+      path: z.string().url('Invalid file URL')
+    })
   ),
   userId: z.string().nonempty()
 })

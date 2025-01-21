@@ -2,8 +2,11 @@
 
 import { ReactNode } from 'react'
 import { SessionProvider } from 'next-auth/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { ThemeProvider } from '@/components/theme-provider'
+
+const queryClient = new QueryClient()
 
 export const Providers = ({ children }: { children: ReactNode }) => {
   return (
@@ -13,7 +16,11 @@ export const Providers = ({ children }: { children: ReactNode }) => {
       enableSystem
       disableTransitionOnChange
     >
-      <SessionProvider>{children}</SessionProvider>
+      <SessionProvider>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </SessionProvider>
     </ThemeProvider>
   )
 }

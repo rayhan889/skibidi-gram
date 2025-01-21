@@ -42,7 +42,7 @@ sleek and seamless user experience.
 - [x] Config uploadthing.
 - [x] Db schema update - add file table.
 - [x] Meme create prep, useForm, typesafe, dropzone, multiple files.
-- [ ] Create a new meme functionality.
+- [x] Create a new meme functionality.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with
 [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).

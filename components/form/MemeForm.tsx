@@ -1,7 +1,7 @@
 'use client'
 
 import { useForm } from 'react-hook-form'
-import { useState, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { type memeInsertSchemaType, memeInsertSchema } from '@/zod-schemas/meme'
 import {
@@ -13,6 +13,10 @@ import {
 import { useDropzone } from 'react-dropzone'
 import type { User } from 'next-auth'
 import { uploadFiles } from '@/lib/uploadthing'
+import { useMutation } from '@tanstack/react-query'
+import { toast } from '@/hooks/use-toast'
+import { LuLoaderCircle } from 'react-icons/lu'
+import { useRouter } from 'next/navigation'
 
 import {
   Form,
@@ -36,10 +40,13 @@ export default function MemeForm({
 }: {
   user: User & { id: string; username?: string | null | undefined }
 }) {
+  const router = useRouter()
+
   const [filePreviews, setFilePreviews] = useState<
     (string | ArrayBuffer | null)[]
   >([])
   const [fileIndex, setFileIndex] = useState<number>(0)
+  const [isImageUploading, setIsImageUploading] = useState<boolean>(false)
 
   const defaultValues: memeInsertSchemaType = {
     title: '',
@@ -54,13 +61,18 @@ export default function MemeForm({
   })
 
   const onUploadFile = async (files: File[]) => {
-    await uploadFiles('imageUploader', {
+    setIsImageUploading(true)
+    const result = await uploadFiles('imageUploader', {
       files
     })
+
+    setIsImageUploading(false)
+
+    return result.map(file => file.url)
   }
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    async (acceptedFiles: File[]) => {
       const previews = acceptedFiles.map(file => {
         const reader = new FileReader()
         return new Promise<string | ArrayBuffer | null>(resolve => {
@@ -69,11 +81,17 @@ export default function MemeForm({
         })
       })
 
+      const uploadedFileUrls = await onUploadFile(acceptedFiles)
+
+      const fileWithUpdatedUrls = acceptedFiles.map((file, index) => ({
+        file,
+        fileName: file.name,
+        fileType: file.type,
+        path: uploadedFileUrls[index]
+      }))
       Promise.all(previews).then(loadedPreviews => {
         setFilePreviews(_ => [...loadedPreviews])
-        form.setValue('files', acceptedFiles)
-        console.log(acceptedFiles)
-        onUploadFile([acceptedFiles[0]])
+        form.setValue('files', fileWithUpdatedUrls)
         form.clearErrors('files')
       })
     },
@@ -88,12 +106,47 @@ export default function MemeForm({
       accept: { 'image/*': ['.jpg', '.png', '.jpeg'] }
     })
 
-  const onSubmit = (data: memeInsertSchemaType) => {
-    console.log(data)
-    console.log('submitted')
+  const onSubmit = () => {
+    createMeme()
   }
 
-  const nextFile = () => {
+  const { mutate: createMeme, isPending: isLoading } = useMutation({
+    mutationFn: async () => {
+      const files = form.getValues('files').map(file => ({
+        fileName: file.fileName,
+        fileType: file.fileType,
+        path: file.path
+      }))
+
+      const payload: memeInsertSchemaType = {
+        title: form.getValues('title'),
+        files,
+        userId: user.id
+      }
+
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }
+      const response = await fetch('/api/meme', requestOptions)
+      const data = await response.json()
+      return data as memeInsertSchemaType & { id: string }
+    },
+    onError: err => {
+      toast({
+        title: 'Error',
+        description: err.message,
+        variant: 'destructive'
+      })
+    },
+    onSuccess: data => {
+      router.push('/home')
+    }
+  })
+
+  const nextFile = (e: React.MouseEvent) => {
+    e.preventDefault()
     if (fileIndex + 1 === filePreviews.length) {
       setFileIndex(0)
     } else {
@@ -101,27 +154,39 @@ export default function MemeForm({
     }
   }
 
-  const prevFile = () => {
-    if (fileIndex - 1 === -1) {
+  const prevFile = (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (fileIndex === 0) {
       setFileIndex(filePreviews.length - 1)
     } else {
       setFileIndex(fileIndex - 1)
     }
   }
 
-  const removeFile = (index: number) => {
+  const removeFile = (e: React.MouseEvent, index: number) => {
+    e.preventDefault()
     setFilePreviews(filePreviews.filter((_, i) => i !== index))
     form.setValue(
       'files',
       form.getValues('files').filter((_, i) => i !== index)
     )
+
+    const newFilePreviews = filePreviews.filter((_, i) => i !== index)
+    if (newFilePreviews.length === 0) {
+      setFileIndex(0)
+    } else if (fileIndex === index) {
+      setFileIndex(prevIndex =>
+        prevIndex === newFilePreviews.length ? prevIndex - 1 : prevIndex
+      )
+    } else if (fileIndex > index) {
+      setFileIndex(fileIndex - 1)
+    }
   }
 
   const clearFormValue = () => {
-    form.resetField('userId')
-    form.resetField('title')
-    form.resetField('files')
+    form.reset(defaultValues)
     setFilePreviews([])
+    setFileIndex(0)
   }
 
   return (
@@ -167,6 +232,7 @@ export default function MemeForm({
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
+                            type='button'
                             className='absolute left-4 top-1/2 z-10 h-10 w-10 rounded-full bg-black/70 text-white shadow-sm'
                             size={'icon'}
                             variant={'ghost'}
@@ -187,10 +253,11 @@ export default function MemeForm({
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
+                            type='button'
                             className='absolute right-4 top-2 z-10 h-10 w-10 rounded-full bg-black/70 text-white shadow-sm'
                             size={'icon'}
                             variant={'ghost'}
-                            onClick={() => removeFile(fileIndex)}
+                            onClick={e => removeFile(e, fileIndex)}
                           >
                             <span className='sr-only'>Remove</span>
                             <FiTrash
@@ -212,6 +279,7 @@ export default function MemeForm({
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
+                            type='button'
                             className='absolute right-4 top-1/2 z-10 h-10 w-10 rounded-full bg-black/70 text-white shadow-sm'
                             size={'icon'}
                             variant={'ghost'}
@@ -235,14 +303,21 @@ export default function MemeForm({
                       {...getRootProps()}
                       className={`custom-scroll flex ${filePreviews.length == 0 ? 'h-[10rem] p-5' : ''} max-h-80 w-full cursor-pointer items-center justify-center space-x-2 overflow-y-hidden rounded-md border border-dashed border-input bg-transparent text-sm text-gray-400 shadow-sm`}
                     >
-                      <>
-                        <FiUploadCloud className='h-5 w-5' />
-                        {isDragActive ? (
-                          <p>Drop the image here!</p>
-                        ) : (
-                          <p>Click here or drag the image to upload it!</p>
-                        )}
-                      </>
+                      {isImageUploading ? (
+                        <>
+                          <LuLoaderCircle className='mr-2 h-5 w-5 animate-spin' />
+                          <p>Uploading...</p>
+                        </>
+                      ) : (
+                        <>
+                          <FiUploadCloud className='h-5 w-5' />
+                          {isDragActive ? (
+                            <p>Drop the image here!</p>
+                          ) : (
+                            <p>Click here or drag the image to upload it!</p>
+                          )}
+                        </>
+                      )}
                       <Input {...getInputProps()} type='file' />
                     </div>
                   </FormControl>
@@ -258,10 +333,22 @@ export default function MemeForm({
             )}
           />
           <div className='flex w-full items-center justify-end space-x-3'>
-            <Button onClick={() => clearFormValue()} variant={'outline'}>
+            <Button
+              type='button'
+              onClick={() => clearFormValue()}
+              variant={'outline'}
+              disabled={
+                form.formState.isSubmitting || isLoading || isImageUploading
+              }
+            >
               Reset
             </Button>
-            <Button type='submit' disabled={form.formState.isSubmitting}>
+            <Button
+              type='submit'
+              disabled={
+                form.formState.isSubmitting || isLoading || isImageUploading
+              }
+            >
               Submit
             </Button>
           </div>
