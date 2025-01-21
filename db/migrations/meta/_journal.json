@@ -5,71 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1736397848775,
-      "tag": "0000_glossy_big_bertha",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1736928761861,
-      "tag": "0001_elite_otto_octavius",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1736933533964,
-      "tag": "0002_familiar_reptil",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1736942210363,
-      "tag": "0003_short_exodus",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1736943881955,
-      "tag": "0004_demonic_randall_flagg",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1737020494679,
-      "tag": "0005_many_yellowjacket",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1737020729517,
-      "tag": "0006_amazing_glorian",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1737020843423,
-      "tag": "0007_conscious_magma",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1737022104236,
-      "tag": "0008_shallow_tomorrow_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1737022449493,
-      "tag": "0009_familiar_drax",
+      "when": 1737452779424,
+      "tag": "0000_fluffy_sage",
       "breakpoints": true
     }
   ]

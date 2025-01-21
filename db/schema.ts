@@ -68,7 +68,6 @@ export const memes = pgTable('memes', {
     .notNull()
     .references(() => users.id),
   title: varchar('title').notNull(),
-  body: text('body').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at')
     .notNull()
@@ -76,13 +75,33 @@ export const memes = pgTable('memes', {
     .$onUpdate(() => new Date())
 })
 
+export const files = pgTable('files', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  fileName: varchar('file_name').notNull(),
+  fileType: varchar('file_type').notNull(),
+  path: varchar('path').notNull(),
+  memeId: text('meme_id')
+    .notNull()
+    .references(() => memes.id)
+})
+
 export const usersRelations = relations(users, ({ many }) => ({
   memes: many(memes)
 }))
 
-export const memesRelations = relations(memes, ({ one }) => ({
+export const memesRelations = relations(memes, ({ one, many }) => ({
   user: one(users, {
     fields: [memes.userId],
     references: [users.id]
+  }),
+  files: many(files)
+}))
+
+export const filesRelations = relations(files, ({ one }) => ({
+  meme: one(memes, {
+    fields: [files.memeId],
+    references: [memes.id]
   })
 }))
