@@ -13,10 +13,11 @@ import {
 import { useDropzone } from 'react-dropzone'
 import type { User } from 'next-auth'
 import { uploadFiles } from '@/lib/uploadthing'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from '@/hooks/use-toast'
 import { LuLoaderCircle } from 'react-icons/lu'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 import {
   Form,
@@ -41,6 +42,7 @@ export default function MemeForm({
   user: User & { id: string; username?: string | null | undefined }
 }) {
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const [filePreviews, setFilePreviews] = useState<
     (string | ArrayBuffer | null)[]
@@ -134,6 +136,9 @@ export default function MemeForm({
       return data as memeInsertSchemaType & { id: string }
     },
     onError: err => {
+      clearFormValue()
+      router.back()
+      router.push('/home')
       toast({
         title: 'Error',
         description: err.message,
@@ -141,7 +146,23 @@ export default function MemeForm({
       })
     },
     onSuccess: data => {
+      clearFormValue()
+
+      queryClient.invalidateQueries({ queryKey: ['memes'] })
+      router.back()
       router.push('/home')
+      router.refresh()
+      toast({
+        title: 'Meme Created!',
+        description: (
+          <p className='text-muted-foreground'>
+            See your new meme{' '}
+            <Link href={`/meme/${data.title}`} className='underline'>
+              here.
+            </Link>
+          </p>
+        )
+      })
     }
   })
 
