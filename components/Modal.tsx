@@ -7,7 +7,12 @@ import { createPortal } from 'react-dom'
 import { Button } from '@/components/ui/button'
 import { FiX } from 'react-icons/fi'
 
-export function Modal({ children }: { children: React.ReactNode }) {
+type Props = {
+  title: string
+  children: React.ReactNode
+}
+
+export function Modal({ children, title }: Props) {
   const router = useRouter()
   const dialogRef = useRef<ComponentRef<'dialog'>>(null)
 
@@ -28,7 +33,10 @@ export function Modal({ children }: { children: React.ReactNode }) {
         className='relative flex w-[80%] max-w-[500px] items-center justify-center rounded-md border border-zinc-300 bg-slate-50 p-5 shadow-md dark:border-zinc-800 dark:bg-zinc-900'
         onClose={onDismiss}
       >
-        {children}
+        <div className='flex w-full flex-col items-start justify-center space-y-8'>
+          <h2 className='text-lg font-semibold'>Create Meme</h2>
+          {children}
+        </div>
         <Button
           onClick={onDismiss}
           variant={'ghost'}
