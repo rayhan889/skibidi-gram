@@ -23,7 +23,7 @@ export const Topbar = () => {
   let truncatedUserEmail
 
   if (session) {
-    initial = session.user.username?.match(/[A-Z]/g)?.join('')
+    initial = session.user.name?.match(/[A-Z]/g)?.join('')
     truncatedUserEmail = session.user.email?.slice(0, 13) + '...'
   }
 

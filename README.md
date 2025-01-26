@@ -43,6 +43,12 @@ sleek and seamless user experience.
 - [x] Db schema update - add file table.
 - [x] Meme create prep, useForm, typesafe, dropzone, multiple files.
 - [x] Create a new meme functionality.
+- [x] State when meme is created.
+- [x] Fetch all memes from db.
+- [x] Solve image load issue(image load took a more time, so i need to separate
+      it into a component).
+- [x] Image modal (using parallel route).
+- [ ] Meme details page.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with
 [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).

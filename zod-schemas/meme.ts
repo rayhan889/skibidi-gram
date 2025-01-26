@@ -14,12 +14,20 @@ export const memeInsertSchema = z.object({
 
 export const memeSelectSchema = z.object({
   id: z.string(),
-  userId: z.string(),
   title: z.string(),
-  file: z.object({
-    fileName: z.string(),
-    fileType: z.string(),
-    path: z.string()
+  createdAt: z.string(),
+  files: z.array(
+    z.object({
+      fileName: z.string().min(1),
+      fileType: z.string().min(1),
+      path: z.string().url('Invalid file URL')
+    })
+  ),
+  user: z.object({
+    username: z.string(),
+    fullName: z.string(),
+    email: z.string().email(),
+    image: z.string()
   })
 })
 

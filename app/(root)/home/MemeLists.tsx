@@ -1,18 +1,33 @@
-'use server'
+'use client'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { type memeSelectSchemaType } from '@/zod-schemas/meme'
-import { type userSelectSchemaType } from '@/zod-schemas/user'
+import { useQuery } from '@tanstack/react-query'
+import { memeSelectSchemaType } from '@/zod-schemas/meme'
+import { LuLoaderCircle } from 'react-icons/lu'
 
-type MemeWithUser = {
-  memes: memeSelectSchemaType
-  users: userSelectSchemaType
-}
+import { MemeCard } from '@/components/MemeCard'
 
-export default async function MemeLists() {
+export default function MemeLists() {
+  const { data: memes, isLoading } = useQuery({
+    queryKey: ['memes'],
+    queryFn: async () => {
+      const response = await fetch('/api/meme')
+      const data: memeSelectSchemaType[] = await response.json()
+      return data
+    }
+  })
+
   return (
-    <section className='flex flex-col'>
-      <div className='py-3'></div>
+    <section className='flex h-full flex-col'>
+      {isLoading ? (
+        <div className='flex h-full items-center justify-center space-x-2 text-muted-foreground'>
+          <p>Loading...</p>
+          <LuLoaderCircle className='mr-2 h-5 w-5 animate-spin' />
+        </div>
+      ) : (
+        <div className='py-3'>
+          {memes?.map((meme, index) => <MemeCard key={index} data={meme} />)}
+        </div>
+      )}
     </section>
   )
 }

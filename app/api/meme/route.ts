@@ -1,19 +1,54 @@
 import { memes, users, files as filesDb } from '@/db/schema'
-import { eq } from 'drizzle-orm'
+import { eq, desc, inArray } from 'drizzle-orm'
 import { memeInsertSchema } from '@/zod-schemas/meme'
 import { getAuthSession } from '@/lib/auth'
 import { z } from 'zod'
 import { nanoid } from 'nanoid'
 import { db } from '@/db'
 
-export async function GET(req: Request) {
+export async function GET(_: Request) {
   try {
-    const data = await db
-      .select()
+    const memeWithUsers = await db
+      .select({
+        id: memes.id,
+        title: memes.title,
+        createdAt: memes.createdAt,
+        user: {
+          username: users.username,
+          fullName: users.name,
+          email: users.email,
+          image: users.image
+        }
+      })
       .from(memes)
       .innerJoin(users, eq(memes.userId, users.id))
+      .orderBy(desc(memes.createdAt))
+      .limit(5)
 
-    return Response.json(data)
+    const memeIds = memeWithUsers.map(meme => meme.id)
+
+    const files = await db
+      .select({
+        memeId: filesDb.memeId,
+        fileName: filesDb.fileName,
+        fileType: filesDb.fileType,
+        path: filesDb.path
+      })
+      .from(filesDb)
+      .where(inArray(filesDb.memeId, memeIds))
+
+    const result = memeWithUsers.map(meme => ({
+      ...meme,
+      files: files
+        .filter(file => file.memeId === meme.id)
+        .map(file => ({
+          fileName: file.fileName,
+          fileType: file.fileType,
+          path: file.path
+        }))
+    }))
+
+    return Response.json(result)
   } catch (error) {
     console.error('Error fetching memes:', error)
     return Response.json({ error: 'Failed to fetch memes' }, { status: 500 })
