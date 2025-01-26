@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal } from '@/components/Modal'
+import { Modal } from './modal'
 import { getAuthSession } from '@/lib/auth'
 
 import MemeForm from '@/components/form/MemeForm'

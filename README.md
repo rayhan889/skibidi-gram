@@ -45,6 +45,9 @@ sleek and seamless user experience.
 - [x] Create a new meme functionality.
 - [x] State when meme is created.
 - [x] Fetch all memes from db.
+- [x] Solve image load issue(image load took a more time, so i need to separate
+      it into a component).
+- [x] Image modal (using parallel route).
 - [ ] Meme details page.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with

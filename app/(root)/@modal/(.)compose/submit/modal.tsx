@@ -34,10 +34,11 @@ export function Modal({ children, title }: Props) {
         onClose={onDismiss}
       >
         <div className='flex w-full flex-col items-start justify-center space-y-8'>
-          <h2 className='text-lg font-semibold'>Create Meme</h2>
+          <h2 className='text-lg font-semibold'>{title}</h2>
           {children}
         </div>
         <Button
+          size={'icon'}
           onClick={onDismiss}
           variant={'ghost'}
           className='absolute right-2 top-2'

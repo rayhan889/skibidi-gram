@@ -1,5 +1,6 @@
 import { FiMoreHorizontal, FiEdit3, FiTrash2, FiBookmark } from 'react-icons/fi'
 import { formatDate } from '@/lib/formatDate'
+import { memeSelectSchemaType } from '@/zod-schemas/meme'
 
 import { Button } from '@/components/ui/button'
 import { AvatarFallback, AvatarImage, Avatar } from '@/components/ui/avatar'
@@ -9,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { memeSelectSchemaType } from '@/zod-schemas/meme'
+import { MemeImage } from '@/components/MemeImage'
 
 export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
   const initial = data.user.fullName.match(/[A-Z]/g)?.join('')
@@ -88,19 +89,15 @@ export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
         </div>
         <div className='grid grid-cols-2 gap-2'>
           {data.files.slice(0, 4).map((file, index) => (
-            <div className={`${isDisplayFull(index) && 'col-span-2'} relative`}>
-              {data.files.length > 4 && lastIndex - 1 == index && (
-                <div className='absolute flex h-full w-full items-center justify-center rounded-md bg-black/65'>
-                  <span className='text-xl font-medium text-white'>+ 1</span>
-                </div>
-              )}
-              <img
-                key={index}
-                src={file.path}
-                alt={file.fileName}
-                className={`h-[10rem] w-full cursor-pointer rounded-md object-cover md:h-[16rem]`}
-              />
-            </div>
+            <MemeImage
+              key={index}
+              file={file}
+              memeId={data.id}
+              username={data.user.username}
+              fileIndex={index}
+              isDisplayFull={isDisplayFull(index)}
+              isLast={data.files.length > 4 && lastIndex - 1 == index}
+            />
           ))}
         </div>
       </div>
