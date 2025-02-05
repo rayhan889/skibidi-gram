@@ -44,11 +44,11 @@ export const MemeImageFullView = ({
   if (isLoading || !images) return <div>Loading...</div>
 
   const nextFile = () => {
-    router.push(`/${user}/${memeId}/image/${Number(imageIndex) + 1}`)
+    router.push(`/${user}/memes/${memeId}/image/${Number(imageIndex) + 1}`)
   }
 
   const prevFile = () => {
-    router.push(`/${user}/${memeId}/image/${Number(imageIndex) - 1}`)
+    router.push(`/${user}/memes/${memeId}/image/${Number(imageIndex) - 1}`)
   }
 
   return (
