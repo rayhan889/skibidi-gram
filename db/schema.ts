@@ -26,6 +26,22 @@ export const users = pgTable('user', {
     .$onUpdate(() => new Date())
 })
 
+export const userExtras = pgTable('user_extras', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  bio: text('bio'),
+  background: text('background'),
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date())
+})
+
 export const accounts = pgTable(
   'account',
   {
@@ -87,8 +103,9 @@ export const files = pgTable('files', {
     .references(() => memes.id)
 })
 
-export const usersRelations = relations(users, ({ many }) => ({
-  memes: many(memes)
+export const usersRelations = relations(users, ({ one, many }) => ({
+  memes: many(memes),
+  userExtras: one(userExtras)
 }))
 
 export const memesRelations = relations(memes, ({ one, many }) => ({
@@ -103,5 +120,12 @@ export const filesRelations = relations(files, ({ one }) => ({
   meme: one(memes, {
     fields: [files.memeId],
     references: [memes.id]
+  })
+}))
+
+export const userExtrasRelations = relations(userExtras, ({ one }) => ({
+  user: one(users, {
+    fields: [userExtras.userId],
+    references: [users.id]
   })
 }))

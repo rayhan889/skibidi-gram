@@ -20,11 +20,13 @@ export const Topbar = () => {
   const { data: session } = useSession()
 
   let initial
+  let truncatedUserName
   let truncatedUserEmail
 
   if (session) {
     initial = session.user.name?.match(/[A-Z]/g)?.join('')
     truncatedUserEmail = session.user.email?.slice(0, 13) + '...'
+    truncatedUserName = session.user.name?.slice(0, 13) + '...'
   }
 
   return (
@@ -72,7 +74,10 @@ export const Topbar = () => {
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <div className='flex items-center px-3'>
+                <Link
+                  href={`/user/${session.user.username ?? 'abcd'}`}
+                  className='flex items-center px-3'
+                >
                   <Avatar>
                     <AvatarImage
                       src={session.user.image!}
@@ -81,13 +86,20 @@ export const Topbar = () => {
                     <AvatarFallback>{initial}</AvatarFallback>
                   </Avatar>
                   <div className='block p-4'>
-                    <h3 className='font-medium'>{session.user.name}</h3>
+                    <h3 className='font-medium'>{truncatedUserName}</h3>
                     <span className='text-sm text-muted-foreground'>
                       {truncatedUserEmail}
                     </span>
                   </div>
-                </div>
+                </Link>
                 <DropdownMenuSeparator />
+                <Link
+                  className={`${buttonVariants({ variant: 'ghost', className: 'flex w-full' })}`}
+                  href={`/user/${session.user.username ?? 'abcd'}`}
+                  style={{ justifyContent: 'start' }}
+                >
+                  Profile
+                </Link>
                 <Button
                   variant={'ghost'}
                   className='flex w-full justify-start'
