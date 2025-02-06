@@ -1,4 +1,4 @@
-import { FiMoreHorizontal, FiEdit3, FiTrash2, FiBookmark } from 'react-icons/fi'
+import { FiMoreHorizontal, FiBookmark } from 'react-icons/fi'
 import { formatDate } from '@/lib/formatDate'
 import { memeSelectSchemaType } from '@/zod-schemas/meme'
 
@@ -7,7 +7,6 @@ import { AvatarFallback, AvatarImage, Avatar } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { MemeImage } from '@/components/MemeImage'
@@ -15,6 +14,8 @@ import { MemeImage } from '@/components/MemeImage'
 export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
   const initial = data.user.fullName.match(/[A-Z]/g)?.join('')
   const lastIndex = data.files.length - 1
+
+  let truncatedUserName
 
   function isDisplayFull(index: number): boolean {
     if (data.files.length === 1) {
@@ -24,6 +25,13 @@ export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
     }
 
     return false
+  }
+
+  if (data.user.fullName) {
+    truncatedUserName =
+      data.user.fullName.length > 15
+        ? data.user.fullName.slice(0, 15) + '...'
+        : data.user.fullName
   }
 
   return (
@@ -36,7 +44,7 @@ export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
         <div className='flex items-start justify-between'>
           <div className='block'>
             <div className='flex flex-col items-start gap-x-2 md:flex-row md:items-center'>
-              <h4 className='font-semibold'>{data.user.fullName}</h4>
+              <h4 className='font-semibold'>{truncatedUserName}</h4>
               <div className='flex items-center space-x-1'>
                 <span className='text-sm text-muted-foreground'>
                   @{data.user.username}
@@ -62,27 +70,8 @@ export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
                   justifyContent: 'start'
                 }}
               >
-                <FiEdit3 />
-                Edit
-              </Button>
-              <Button
-                variant={'ghost'}
-                style={{
-                  justifyContent: 'start'
-                }}
-              >
                 <FiBookmark />
                 Bookmark
-              </Button>
-              <DropdownMenuSeparator />
-              <Button
-                variant={'ghost'}
-                style={{
-                  justifyContent: 'start'
-                }}
-              >
-                <FiTrash2 />
-                Delete
               </Button>
             </DropdownMenuContent>
           </DropdownMenu>
