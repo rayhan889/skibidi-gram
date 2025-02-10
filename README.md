@@ -48,7 +48,8 @@ sleek and seamless user experience.
 - [x] Solve image load issue(image load took a more time, so i need to separate
       it into a component).
 - [x] Image modal (using parallel route).
-- [ ] User profile page.
+- [x] User profile page.
+- [ ] Edit user profile.
 - [ ] Meme details page.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with

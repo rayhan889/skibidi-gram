@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { userSelechWithExtrasSchemaType } from '@/zod-schemas/user'
 import { LuLoaderCircle } from 'react-icons/lu'
+import { memeSelectSchemaType } from '@/zod-schemas/meme'
 
 import {
   Breadcrumb,
@@ -15,6 +16,7 @@ import {
 } from '@/components/ui/breadcrumb'
 import { BasicProfile } from '@/components/BasicProfile'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import MemesList from '@/components/MemesList'
 
 export default function ProfilePage() {
   const params = useParams<{ username: string }>()
@@ -32,6 +34,15 @@ export default function ProfilePage() {
       const data: userSelechWithExtrasSchemaType = await response.json()
       return data
     }
+  })
+
+  const { data: userMemes, isLoading: isLoadingMemes } = useQuery({
+    queryKey: ['memes'],
+        queryFn: async () => {
+          const response = await fetch(`/api/meme/${params.username}`)
+          const data: memeSelectSchemaType[] = await response.json()
+          return data
+        }
   })
 
   let truncatedUserName = userInfo?.name
@@ -66,7 +77,20 @@ export default function ProfilePage() {
             </Breadcrumb>
           </div>
           <BasicProfile userInfo={userInfo as userSelechWithExtrasSchemaType} />
-          <div className='absolute w-full bg-red-100'>Woi</div>
+          <div className='absolute w-full -translate-x-2 h-full top-[28rem]'>
+            <Tabs defaultValue='memes' className='w-full px-3'>
+              <TabsList className='w-full grid grid-cols-3 gap-2'>
+                <TabsTrigger value='memes'>Memes</TabsTrigger>
+                <TabsTrigger value='replies'>Replies</TabsTrigger>
+                <TabsTrigger value='likes'>Likes</TabsTrigger>
+              </TabsList>
+              <TabsContent value='memes' className='absolute w-full -translate-x-3'>
+                <MemesList memes={userMemes as memeSelectSchemaType[]} isLoading={isLoadingMemes} />
+              </TabsContent>
+              <TabsContent value='replies'>Lisf of replies</TabsContent>
+              <TabsContent value='likes'>Lisf of liked memes</TabsContent>
+            </Tabs>
+          </div>
         </div>
       )}
     </section>
