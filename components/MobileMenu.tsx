@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { FiBookmark, FiHome, FiPlus, FiSearch } from 'react-icons/fi'
 import { HiOutlineMenuAlt2 } from 'react-icons/hi'
 import { useState } from 'react'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
 import { Button, buttonVariants } from '@/components/ui/button'
 import { ModeToggle } from '@/components/ModeToggle'
@@ -40,11 +40,13 @@ export const MobileMenu = () => {
   const { data: session } = useSession()
 
   let initial
+  let truncatedUserName
   let truncatedUserEmail
 
   if (session) {
     initial = session.user.name?.match(/[A-Z]/g)?.join('')
     truncatedUserEmail = session.user.email?.slice(0, 13) + '...'
+    truncatedUserName = session.user.name?.slice(0, 13) + '...'
   }
 
   return (
@@ -76,38 +78,61 @@ export const MobileMenu = () => {
             <div className='mr-2'>
               <ModeToggle />
             </div>
-            {session && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Avatar className='h-8 w-8 cursor-pointer'>
+            {session ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className='h-8 w-8 cursor-pointer'>
+                  <AvatarImage
+                    src={session.user.image!}
+                    alt={session.user.username!}
+                  />
+                  <AvatarFallback>{initial}</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <Link
+                  href={`/user/${session.user.username ?? 'username'}`}
+                  className='flex items-center px-3'
+                >
+                  <Avatar>
                     <AvatarImage
                       src={session.user.image!}
                       alt={session.user.username!}
                     />
                     <AvatarFallback>{initial}</AvatarFallback>
                   </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <div className='flex items-center px-3'>
-                    <Avatar>
-                      <AvatarImage
-                        src={session.user.image!}
-                        alt={session.user.username!}
-                      />
-                      <AvatarFallback>{initial}</AvatarFallback>
-                    </Avatar>
-                    <div className='block p-4'>
-                      <h3 className='font-medium'>{session.user.name}</h3>
-                      <span className='text-sm text-zinc-500'>
-                        {truncatedUserEmail}
-                      </span>
-                    </div>
+                  <div className='block p-4'>
+                    <h3 className='font-medium'>{truncatedUserName}</h3>
+                    <span className='text-sm text-muted-foreground'>
+                      {truncatedUserEmail}
+                    </span>
                   </div>
-                  <DropdownMenuSeparator />
-                  {/* Logout Button */}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+                </Link>
+                <DropdownMenuSeparator />
+                <Link
+                  className={`${buttonVariants({ variant: 'ghost', className: 'flex w-full' })}`}
+                  href={`/user/${session.user.username ?? 'username'}`}
+                  style={{ justifyContent: 'start' }}
+                >
+                  Profile
+                </Link>
+                <Button
+                  variant={'ghost'}
+                  className='flex w-full justify-start'
+                  onClick={() => signOut({ callbackUrl: '/signin' })}
+                >
+                  Logout
+                </Button>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link
+              href={'/signin'}
+              className={`${buttonVariants({ variant: 'ghost' })}`}
+            >
+              Sign In
+            </Link>
+          )}
           </div>
         </div>
       </nav>

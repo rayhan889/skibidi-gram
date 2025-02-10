@@ -19,7 +19,7 @@ export default async function RootLayout({
       <section className='container mx-auto lg:max-w-[120rem]'>
         <div className='mt-20 grid grid-cols-1 gap-4 lg:grid-cols-3'>
           <LeftSidebar />
-          <main className='custom-scroll h-[88vh] w-full overflow-y-auto scroll-smooth border border-t-0 border-zinc-300 dark:border-zinc-800 lg:h-[92vh]'>
+          <main className='custom-scroll h-[88vh] w-full overflow-y-auto scroll-smooth border border-t-0 border-zinc-200 dark:border-zinc-800 lg:h-[92vh]'>
             {children}
           </main>
           <RightSidebar />

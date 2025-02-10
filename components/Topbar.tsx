@@ -30,7 +30,7 @@ export const Topbar = () => {
   }
 
   return (
-    <nav className='fixed left-0 right-0 top-0 z-50 hidden h-20 items-center justify-between border-b border-zinc-300 bg-white/75 shadow-sm backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/75 lg:flex'>
+    <nav className='fixed left-0 right-0 top-0 z-50 hidden h-20 items-center justify-between border-b border-zinc-200 bg-muted dark:border-zinc-800  lg:flex'>
       <div className='container mx-auto flex w-full max-w-7xl items-center justify-between'>
         <Link
           href='/'
@@ -75,7 +75,7 @@ export const Topbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <Link
-                  href={`/user/${session.user.username ?? 'abcd'}`}
+                  href={`/user/${session.user.username ?? 'username'}`}
                   className='flex items-center px-3'
                 >
                   <Avatar>
@@ -95,7 +95,7 @@ export const Topbar = () => {
                 <DropdownMenuSeparator />
                 <Link
                   className={`${buttonVariants({ variant: 'ghost', className: 'flex w-full' })}`}
-                  href={`/user/${session.user.username ?? 'abcd'}`}
+                  href={`/user/${session.user.username ?? 'username'}`}
                   style={{ justifyContent: 'start' }}
                 >
                   Profile

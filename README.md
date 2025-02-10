@@ -48,8 +48,9 @@ sleek and seamless user experience.
 - [x] Solve image load issue(image load took a more time, so i need to separate
       it into a component).
 - [x] Image modal (using parallel route).
-- [ ] User profile page.
-- [ ] Meme details page.
+- [x] User profile page.
+- [x] Fixing UI issues.
+- [ ] Edit user profile.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with
 [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).

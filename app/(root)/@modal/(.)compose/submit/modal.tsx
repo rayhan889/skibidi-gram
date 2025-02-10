@@ -30,7 +30,7 @@ export function Modal({ children, title }: Props) {
     <div className='absolute inset-0 z-[1000] flex items-center justify-center bg-black/65'>
       <dialog
         ref={dialogRef}
-        className='relative flex w-[80%] max-w-[500px] items-center justify-center rounded-md border border-zinc-300 bg-slate-50 p-5 shadow-md dark:border-zinc-800 dark:bg-zinc-900'
+        className='relative flex w-[80%] max-w-[500px] items-center justify-center rounded-md border border-zinc-200 bg-slate-50 p-5 shadow-md dark:border-zinc-800 dark:bg-zinc-900'
         onClose={onDismiss}
       >
         <div className='flex w-full flex-col items-start justify-center space-y-8'>
