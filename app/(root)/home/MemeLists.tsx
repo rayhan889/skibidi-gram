@@ -1,14 +1,21 @@
+'use client'
+
+import { useQuery } from '@tanstack/react-query'
 import { memeSelectSchemaType } from '@/zod-schemas/meme'
 import { LuLoaderCircle } from 'react-icons/lu'
 
 import { MemeCard } from '@/components/MemeCard'
 
-type MemesListProps = {
-    memes: memeSelectSchemaType[]
-    isLoading?: boolean
-}
+export default function MemeLists() {
+  const { data: memes, isLoading } = useQuery({
+    queryKey: ['memes'],
+    queryFn: async () => {
+      const response = await fetch('/api/meme')
+      const data: memeSelectSchemaType[] = await response.json()
+      return data
+    }
+  })
 
-export default function MemesList({ memes, isLoading }: MemesListProps) {
   return (
     <section className='flex h-full flex-col'>
       {isLoading ? (
