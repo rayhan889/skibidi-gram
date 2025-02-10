@@ -63,7 +63,7 @@ export default function ProfilePage() {
         </div>
       ) : (
         <div className='relative pl-2 pr-4'>
-          <div className='absolute inset-0 h-fit w-full border-b border-zinc-300 bg-white/75 p-5 shadow-sm backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/75'>
+          <div className='absolute inset-0 h-fit w-full border-b border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950'>
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>

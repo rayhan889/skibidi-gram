@@ -49,6 +49,7 @@ sleek and seamless user experience.
       it into a component).
 - [x] Image modal (using parallel route).
 - [x] User profile page.
+- [x] Fixing UI issues.
 - [ ] Edit user profile.
 - [ ] Meme details page.
 
