@@ -51,7 +51,6 @@ sleek and seamless user experience.
 - [x] User profile page.
 - [x] Fixing UI issues.
 - [ ] Edit user profile.
-- [ ] Meme details page.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with
 [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
