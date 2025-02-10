@@ -66,7 +66,6 @@ export default function ProfilePage() {
             </Breadcrumb>
           </div>
           <BasicProfile userInfo={userInfo as userSelechWithExtrasSchemaType} />
-          <div className='absolute w-full bg-red-100'>Woi</div>
         </div>
       )}
     </section>
