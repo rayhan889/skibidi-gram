@@ -40,8 +40,9 @@ export const MemeImage = ({
         </div>
       )}
       <Image
-        width={100}
-        height={100}
+        width={500}
+        height={500}
+        quality={50}
         src={file.path}
         alt={file.fileName}
         className='h-[10rem] w-full cursor-pointer rounded-md object-cover md:h-[16rem]'
