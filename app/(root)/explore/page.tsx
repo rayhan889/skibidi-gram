@@ -12,7 +12,7 @@ export default async function ExplorePage() {
   }
 
   return (
-    <section className='space-y-8 p-3'>
+    <section className='h-full space-y-8 p-3'>
       <Searchbar />
       <SearchResult />
     </section>
