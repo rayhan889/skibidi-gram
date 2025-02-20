@@ -51,7 +51,7 @@ export const MobileMenu = () => {
 
   return (
     <>
-      <nav className='fixed left-0 right-0 top-0 z-50 flex h-20 items-center justify-between border-b border-zinc-300 bg-white/75 shadow-sm backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/75 lg:hidden'>
+      <nav className='fixed left-0 right-0 top-0 z-50 flex h-20 items-center justify-between border-b border-zinc-300 bg-muted shadow-sm dark:border-zinc-800 lg:hidden'>
         <div className='container mx-auto flex w-full max-w-7xl items-center justify-between'>
           <div className='flex items-center'>
             <Button
@@ -79,60 +79,60 @@ export const MobileMenu = () => {
               <ModeToggle />
             </div>
             {session ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Avatar className='h-8 w-8 cursor-pointer'>
-                  <AvatarImage
-                    src={session.user.image!}
-                    alt={session.user.username!}
-                  />
-                  <AvatarFallback>{initial}</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <Link
-                  href={`/user/${session.user.username ?? 'username'}`}
-                  className='flex items-center px-3'
-                >
-                  <Avatar>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar className='h-8 w-8 cursor-pointer'>
                     <AvatarImage
                       src={session.user.image!}
                       alt={session.user.username!}
                     />
                     <AvatarFallback>{initial}</AvatarFallback>
                   </Avatar>
-                  <div className='block p-4'>
-                    <h3 className='font-medium'>{truncatedUserName}</h3>
-                    <span className='text-sm text-muted-foreground'>
-                      {truncatedUserEmail}
-                    </span>
-                  </div>
-                </Link>
-                <DropdownMenuSeparator />
-                <Link
-                  className={`${buttonVariants({ variant: 'ghost', className: 'flex w-full' })}`}
-                  href={`/user/${session.user.username ?? 'username'}`}
-                  style={{ justifyContent: 'start' }}
-                >
-                  Profile
-                </Link>
-                <Button
-                  variant={'ghost'}
-                  className='flex w-full justify-start'
-                  onClick={() => signOut({ callbackUrl: '/signin' })}
-                >
-                  Logout
-                </Button>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Link
-              href={'/signin'}
-              className={`${buttonVariants({ variant: 'ghost' })}`}
-            >
-              Sign In
-            </Link>
-          )}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <Link
+                    href={`/user/${session.user.username ?? 'username'}`}
+                    className='flex items-center px-3'
+                  >
+                    <Avatar>
+                      <AvatarImage
+                        src={session.user.image!}
+                        alt={session.user.username!}
+                      />
+                      <AvatarFallback>{initial}</AvatarFallback>
+                    </Avatar>
+                    <div className='block p-4'>
+                      <h3 className='font-medium'>{truncatedUserName}</h3>
+                      <span className='text-sm text-muted-foreground'>
+                        {truncatedUserEmail}
+                      </span>
+                    </div>
+                  </Link>
+                  <DropdownMenuSeparator />
+                  <Link
+                    className={`${buttonVariants({ variant: 'ghost', className: 'flex w-full' })}`}
+                    href={`/user/${session.user.username ?? 'username'}`}
+                    style={{ justifyContent: 'start' }}
+                  >
+                    Profile
+                  </Link>
+                  <Button
+                    variant={'ghost'}
+                    className='flex w-full justify-start'
+                    onClick={() => signOut({ callbackUrl: '/signin' })}
+                  >
+                    Logout
+                  </Button>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link
+                href={'/signin'}
+                className={`${buttonVariants({ variant: 'ghost' })}`}
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
       </nav>

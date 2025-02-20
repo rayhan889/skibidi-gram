@@ -50,6 +50,8 @@ sleek and seamless user experience.
 - [x] Image modal (using parallel route).
 - [x] User profile page.
 - [x] Fixing UI issues.
+- [x] Search memes functionality.
+- [x] Search history stored in localstorage.
 - [ ] Edit user profile.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with
