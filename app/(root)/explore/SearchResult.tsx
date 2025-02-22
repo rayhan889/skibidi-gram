@@ -8,6 +8,8 @@ import { LuLoaderCircle } from 'react-icons/lu'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import TopContent from './TopContent'
+import PeopleContent from './PeopleContent'
+import MemeContent from './MemeContent'
 
 export interface SearchResultType {
   memes: memeSelectSchemaType[]
@@ -60,8 +62,12 @@ export default function SearchResult() {
             <TabsContent value='top' className='h-full'>
               <TopContent searchData={searchData} />
             </TabsContent>
-            <TabsContent value='people'></TabsContent>
-            <TabsContent value='meme'></TabsContent>
+            <TabsContent value='people' className='h-full'>
+              <PeopleContent users={searchData.users} />
+            </TabsContent>
+            <TabsContent value='meme'>
+              <MemeContent memes={searchData.memes} />
+            </TabsContent>
           </>
         ) : (
           <div className='flex h-full items-center justify-center space-x-2 text-muted-foreground'>

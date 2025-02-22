@@ -3,10 +3,9 @@ import { eq, desc, inArray, or, ilike } from 'drizzle-orm'
 import { db } from '@/db'
 import { NextRequest } from 'next/server'
 
-export async function GET(req: NextRequest, { params }: { params: { search: string } }) {
+export async function GET(req: NextRequest) {
   try {
     const search = req.nextUrl.searchParams.get('search') || ''
-    console.log('Search: ', search)
 
     const memeWithUsers = await db
       .select({
@@ -24,9 +23,9 @@ export async function GET(req: NextRequest, { params }: { params: { search: stri
       .innerJoin(users, eq(memes.userId, users.id))
       .where(
         or(
-            ilike(memes.title, `%${search}%`),
-            ilike(users.username, `%${search}%`),
-            ilike(users.name, `%${search}%`)
+          ilike(memes.title, `%${search}%`),
+          ilike(users.username, `%${search}%`),
+          ilike(users.name, `%${search}%`)
         )
       )
       .orderBy(desc(memes.createdAt))
@@ -43,20 +42,22 @@ export async function GET(req: NextRequest, { params }: { params: { search: stri
       .from(filesDb)
       .where(inArray(filesDb.memeId, memeIds))
 
-    const usersData = await db.select({
-            id: users.id,
-            name: users.name,
-            username: users.username,
-            email: users.email,
-            image: users.image,
-            createdAt: users.createdAt
-        })
-        .from(users).where(
-            or(
-                ilike(users.username, `%${search}%`),
-                ilike(users.name, `%${search}%`)
-            )
+    const usersData = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        username: users.username,
+        email: users.email,
+        image: users.image,
+        createdAt: users.createdAt
+      })
+      .from(users)
+      .where(
+        or(
+          ilike(users.username, `%${search}%`),
+          ilike(users.name, `%${search}%`)
         )
+      )
 
     const memesData = memeWithUsers.map(meme => ({
       ...meme,
@@ -70,8 +71,8 @@ export async function GET(req: NextRequest, { params }: { params: { search: stri
     }))
 
     const result = {
-        memes: memesData,
-        users: usersData
+      memes: memesData,
+      users: usersData
     }
 
     return Response.json(result)
