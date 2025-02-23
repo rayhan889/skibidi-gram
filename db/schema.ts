@@ -27,14 +27,11 @@ export const users = pgTable('user', {
 })
 
 export const userExtras = pgTable('user_extras', {
-  id: text('id')
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  bio: text('bio'),
-  background: text('background'),
   userId: text('userId')
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: 'cascade' }),
+  bio: text('bio'),
+  background: text('background'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at')
     .notNull()

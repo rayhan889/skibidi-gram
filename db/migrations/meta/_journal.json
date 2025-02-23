@@ -15,6 +15,13 @@
       "when": 1738738604411,
       "tag": "0001_orange_warlock",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740311270347,
+      "tag": "0002_old_lizard",
+      "breakpoints": true
     }
   ]
 }
