@@ -1,5 +1,5 @@
-import { memes, users, files as filesDb } from '@/db/schema'
-import { eq, desc, inArray } from 'drizzle-orm'
+import { memes, users, files as filesDb, likes } from '@/db/schema'
+import { eq, desc, inArray, and, like } from 'drizzle-orm'
 import { memeInsertSchema } from '@/zod-schemas/meme'
 import { getAuthSession } from '@/lib/auth'
 import { z } from 'zod'
@@ -13,7 +13,9 @@ export async function GET(_: Request) {
         id: memes.id,
         title: memes.title,
         createdAt: memes.createdAt,
+        // likesCount: likes.memeId
         user: {
+          id: users.id,
           username: users.username,
           fullName: users.name,
           email: users.email,

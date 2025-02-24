@@ -52,7 +52,8 @@ sleek and seamless user experience.
 - [x] Fixing UI issues.
 - [x] Search memes functionality.
 - [x] Search history stored in localstorage.
-- [ ] Top, people, memes tabs on search page.
+- [x] Top, people, memes tabs on search page.
+- [ ] Like system.
 - [ ] Edit user profile.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with

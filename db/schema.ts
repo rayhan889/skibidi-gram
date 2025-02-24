@@ -97,8 +97,26 @@ export const files = pgTable('files', {
   path: varchar('path').notNull(),
   memeId: text('meme_id')
     .notNull()
-    .references(() => memes.id)
+    .references(() => memes.id, { onDelete: 'cascade' })
 })
+
+export const likes = pgTable(
+  'likes',
+  {
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    memeId: text('meme_id')
+      .notNull()
+      .references(() => memes.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at').notNull().defaultNow()
+  },
+  likes => [
+    primaryKey({
+      columns: [likes.userId, likes.memeId]
+    })
+  ]
+)
 
 export const usersRelations = relations(users, ({ one, many }) => ({
   memes: many(memes),
@@ -124,5 +142,16 @@ export const userExtrasRelations = relations(userExtras, ({ one }) => ({
   user: one(users, {
     fields: [userExtras.userId],
     references: [users.id]
+  })
+}))
+
+export const likesRelations = relations(likes, ({ one }) => ({
+  user: one(users, {
+    fields: [likes.userId],
+    references: [users.id]
+  }),
+  meme: one(memes, {
+    fields: [likes.memeId],
+    references: [memes.id]
   })
 }))
