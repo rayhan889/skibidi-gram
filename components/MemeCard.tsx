@@ -21,11 +21,12 @@ import { toast } from '@/hooks/use-toast'
 export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
   const [isLiked, setIsLiked] = useState(false)
 
+  console.log('Is Meme Liked: ', data.isLiked)
+
   const { mutate: likeMeme, data: likesCount } = useMutation({
     mutationFn: async () => {
       const payload: likeInsertSchemaType = {
         memeId: data.id,
-        userId: data.user.id
       }
 
       const requestOptions = {
@@ -143,7 +144,7 @@ export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
                 <Heart size={16} fill={isLiked ? 'rgb(219 39 119)' : 'none'} />
               </motion.div>
             </div>
-            {likesCount ?? 0}
+            {likesCount ?? data.likeCount}
           </span>
         </div>
       </div>

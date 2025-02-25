@@ -8,12 +8,18 @@ import { db } from '@/db'
 
 export async function GET(_: Request) {
   try {
+    const session = await getAuthSession()
+    if (!session?.user) {
+      return new Response('Unauthorized', { status: 401 })
+    }
+
+    const userId = session.user.id
+
     const memeWithUsers = await db
       .select({
         id: memes.id,
         title: memes.title,
         createdAt: memes.createdAt,
-        // likesCount: likes.memeId
         user: {
           id: users.id,
           username: users.username,
@@ -29,6 +35,12 @@ export async function GET(_: Request) {
 
     const memeIds = memeWithUsers.map(meme => meme.id)
 
+    const likesCounts = await db
+      .select({memeId: likes.memeId})
+      .from(likes)
+      .where(inArray(likes.memeId, memeIds))
+      .groupBy(likes.memeId, likes.userId)
+
     const files = await db
       .select({
         memeId: filesDb.memeId,
@@ -39,6 +51,14 @@ export async function GET(_: Request) {
       .from(filesDb)
       .where(inArray(filesDb.memeId, memeIds))
 
+    let userLikes: {memeId: string}[] = []
+    if (userId) {
+      userLikes = await db
+        .select({memeId: likes.memeId})
+        .from(likes)
+        .where(and(eq(likes.userId, userId), inArray(likes.memeId, memeIds)))
+    }
+
     const result = memeWithUsers.map(meme => ({
       ...meme,
       files: files
@@ -47,7 +67,9 @@ export async function GET(_: Request) {
           fileName: file.fileName,
           fileType: file.fileType,
           path: file.path
-        }))
+        })),
+      likeCount: likesCounts.filter(like => like.memeId === meme.id).length,
+      isLiked: userLikes.some(like => like.memeId === meme.id)
     }))
 
     return Response.json(result)

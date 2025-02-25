@@ -12,14 +12,18 @@ export async function POST(req: Request) {
       return new Response('Unauthorized', { status: 401 })
     }
 
+    const userId = session.user.id
+
     const body = await req.json()
-    const { memeId, userId } = likeInsertSchema.parse(body)
+    const { memeId } = likeInsertSchema.parse(body)
 
     const alreadyLikeMeme = await db
       .select()
       .from(likes)
       .where(and(eq(likes.userId, userId), eq(likes.memeId, memeId)))
       .limit(1)
+
+    console.log('first', alreadyLikeMeme)
 
     if (alreadyLikeMeme.length > 0) {
       await db
@@ -31,7 +35,7 @@ export async function POST(req: Request) {
 
     const likesCount = await db.$count(
       likes,
-      and(eq(likes.userId, userId), eq(likes.memeId, memeId))
+      eq(likes.memeId, memeId)
     )
 
     return Response.json(likesCount, { status: 201 })
