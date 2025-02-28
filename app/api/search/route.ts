@@ -1,10 +1,17 @@
-import { memes, users, files as filesDb } from '@/db/schema'
-import { eq, desc, inArray, or, ilike } from 'drizzle-orm'
+import { memes, users, files as filesDb, likes } from '@/db/schema'
+import { eq, desc, inArray, or, ilike, and } from 'drizzle-orm'
 import { db } from '@/db'
 import { NextRequest } from 'next/server'
+import { getAuthSession } from '@/lib/auth'
 
 export async function GET(req: NextRequest) {
   try {
+    const session = await getAuthSession()
+    if (!session?.user) {
+      return new Response('Unauthorized', { status: 401 })
+    }
+
+    const userId = session.user.id
     const search = req.nextUrl.searchParams.get('search') || ''
 
     const memeWithUsers = await db
@@ -32,6 +39,12 @@ export async function GET(req: NextRequest) {
 
     const memeIds = memeWithUsers.map(meme => meme.id)
 
+    const likesCounts = await db
+      .select({ memeId: likes.memeId })
+      .from(likes)
+      .where(inArray(likes.memeId, memeIds))
+      .groupBy(likes.memeId, likes.userId)
+
     const files = await db
       .select({
         memeId: filesDb.memeId,
@@ -41,6 +54,14 @@ export async function GET(req: NextRequest) {
       })
       .from(filesDb)
       .where(inArray(filesDb.memeId, memeIds))
+
+    let userLikes: { memeId: string }[] = []
+    if (userId) {
+      userLikes = await db
+        .select({ memeId: likes.memeId })
+        .from(likes)
+        .where(and(eq(likes.userId, userId), inArray(likes.memeId, memeIds)))
+    }
 
     const usersData = await db
       .select({
@@ -67,7 +88,9 @@ export async function GET(req: NextRequest) {
           fileName: file.fileName,
           fileType: file.fileType,
           path: file.path
-        }))
+        })),
+      likeCount: likesCounts.filter(like => like.memeId === meme.id).length,
+      isLiked: userLikes.some(like => like.memeId === meme.id)
     }))
 
     const result = {

@@ -19,14 +19,12 @@ import { MemeImage } from '@/components/MemeImage'
 import { toast } from '@/hooks/use-toast'
 
 export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
-  const [isLiked, setIsLiked] = useState(false)
-
-  console.log('Is Meme Liked: ', data.isLiked)
+  const [isLiked, setIsLiked] = useState(data.isLiked)
 
   const { mutate: likeMeme, data: likesCount } = useMutation({
     mutationFn: async () => {
       const payload: likeInsertSchemaType = {
-        memeId: data.id,
+        memeId: data.id
       }
 
       const requestOptions = {
