@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import { useDebounce } from 'use-debounce'
 
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Popover,
   PopoverContent,
@@ -18,7 +18,7 @@ export const Searchbar = () => {
 
   const [search, setSearch] = useState<string>('')
   const [searchHistory, setSearchHistory] = useState<string[]>(() => {
-    if (typeof window != 'undefined' || typeof window != undefined) {
+    if (typeof window != 'undefined') {
       return JSON.parse(localStorage.getItem('searchHistory') || '[]')
     }
     return []
@@ -70,6 +70,10 @@ export const Searchbar = () => {
     setSearch(query)
   }
 
+  const clearSearchValue = () => {
+    setSearch('')
+  }
+
   useEffect(() => {
     if (search) {
       updateSearchHistory(debounced)
@@ -99,6 +103,18 @@ export const Searchbar = () => {
               placeholder='Search...'
               className='w-full rounded-lg py-6 pl-12 pr-6'
             />
+            {search && (
+              <span
+                className={buttonVariants({
+                  variant: 'ghost',
+                  size: 'icon',
+                  className: 'absolute right-2 top-[7px]'
+                })}
+                onClick={clearSearchValue}
+              >
+                <X />
+              </span>
+            )}
           </div>
         </PopoverTrigger>
         {searchHistory.length > 0 && (

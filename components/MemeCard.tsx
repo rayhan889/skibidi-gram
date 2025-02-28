@@ -1,6 +1,12 @@
-import { FiMoreHorizontal, FiBookmark } from 'react-icons/fi'
+'use client'
+
+import { Bookmark, Ellipsis, Heart } from 'lucide-react'
 import { formatDate } from '@/lib/formatDate'
 import { memeSelectSchemaType } from '@/zod-schemas/meme'
+import { useState } from 'react'
+import { motion } from 'motion/react'
+import { useMutation } from '@tanstack/react-query'
+import { likeInsertSchemaType } from '@/zod-schemas/meme'
 
 import { Button } from '@/components/ui/button'
 import { AvatarFallback, AvatarImage, Avatar } from '@/components/ui/avatar'
@@ -10,8 +16,40 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { MemeImage } from '@/components/MemeImage'
+import { toast } from '@/hooks/use-toast'
 
 export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
+  const [isLiked, setIsLiked] = useState(data.isLiked)
+
+  const { mutate: likeMeme, data: likesCount } = useMutation({
+    mutationFn: async () => {
+      const payload: likeInsertSchemaType = {
+        memeId: data.id
+      }
+
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }
+      const response = await fetch('/api/like', requestOptions)
+      const resultData = await response.json()
+      return resultData as number
+    },
+    onError: err => {
+      toast({
+        title: 'Error',
+        description: err.message,
+        variant: 'destructive'
+      })
+    }
+  })
+
+  const handleLike = () => {
+    likeMeme()
+    setIsLiked(prev => !prev)
+  }
+
   const initial = data.user.fullName.match(/[A-Z]/g)?.join('')
   const lastIndex = data.files.length - 1
 
@@ -60,7 +98,7 @@ export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant={'ghost'} size={'icon'}>
-                <FiMoreHorizontal />
+                <Ellipsis />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className='flex flex-col space-y-2'>
@@ -70,7 +108,7 @@ export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
                   justifyContent: 'start'
                 }}
               >
-                <FiBookmark />
+                <Bookmark />
                 Bookmark
               </Button>
             </DropdownMenuContent>
@@ -88,6 +126,24 @@ export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
               isLast={data.files.length > 4 && lastIndex - 1 == index}
             />
           ))}
+        </div>
+        <div className='w-full'>
+          <span
+            className={`flex w-fit items-center gap-1 text-sm hover:text-pink-600 ${isLiked && 'text-pink-600'}`}
+          >
+            <div
+              className='cursor-pointer rounded-full p-2 hover:bg-pink-600/10'
+              onClick={handleLike}
+            >
+              <motion.div
+                animate={{ scale: isLiked ? 1 : 0.8 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              >
+                <Heart size={16} fill={isLiked ? 'rgb(219 39 119)' : 'none'} />
+              </motion.div>
+            </div>
+            {likesCount ?? data.likeCount}
+          </span>
         </div>
       </div>
     </div>

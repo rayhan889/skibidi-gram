@@ -27,14 +27,11 @@ export const users = pgTable('user', {
 })
 
 export const userExtras = pgTable('user_extras', {
-  id: text('id')
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  bio: text('bio'),
-  background: text('background'),
   userId: text('userId')
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: 'cascade' }),
+  bio: text('bio'),
+  background: text('background'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at')
     .notNull()
@@ -100,8 +97,26 @@ export const files = pgTable('files', {
   path: varchar('path').notNull(),
   memeId: text('meme_id')
     .notNull()
-    .references(() => memes.id)
+    .references(() => memes.id, { onDelete: 'cascade' })
 })
+
+export const likes = pgTable(
+  'likes',
+  {
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    memeId: text('meme_id')
+      .notNull()
+      .references(() => memes.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at').notNull().defaultNow()
+  },
+  likes => [
+    primaryKey({
+      columns: [likes.userId, likes.memeId]
+    })
+  ]
+)
 
 export const usersRelations = relations(users, ({ one, many }) => ({
   memes: many(memes),
@@ -127,5 +142,16 @@ export const userExtrasRelations = relations(userExtras, ({ one }) => ({
   user: one(users, {
     fields: [userExtras.userId],
     references: [users.id]
+  })
+}))
+
+export const likesRelations = relations(likes, ({ one }) => ({
+  user: one(users, {
+    fields: [likes.userId],
+    references: [users.id]
+  }),
+  meme: one(memes, {
+    fields: [likes.memeId],
+    references: [memes.id]
   })
 }))

@@ -16,6 +16,8 @@ export const memeSelectSchema = z.object({
   id: z.string(),
   title: z.string(),
   createdAt: z.string(),
+  likeCount: z.number(),
+  isLiked: z.boolean(),
   files: z.array(
     z.object({
       fileName: z.string().min(1),
@@ -24,6 +26,7 @@ export const memeSelectSchema = z.object({
     })
   ),
   user: z.object({
+    id: z.string(),
     username: z.string(),
     fullName: z.string(),
     email: z.string().email(),
@@ -31,6 +34,12 @@ export const memeSelectSchema = z.object({
   })
 })
 
+export const likeInsertSchema = z.object({
+  memeId: z.string().nonempty()
+})
+
 export type memeInsertSchemaType = z.infer<typeof memeInsertSchema>
 
 export type memeSelectSchemaType = z.infer<typeof memeSelectSchema>
+
+export type likeInsertSchemaType = z.infer<typeof likeInsertSchema>
