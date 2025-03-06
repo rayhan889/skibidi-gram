@@ -51,7 +51,7 @@ export const MobileMenu = () => {
 
   return (
     <>
-      <nav className='fixed left-0 right-0 top-0 z-50 flex h-20 items-center justify-between border-b border-zinc-300 bg-muted shadow-sm dark:border-zinc-800 lg:hidden'>
+      <nav className='fixed left-0 right-0 top-0 z-50 flex h-20 items-center justify-between border-b border-zinc-300 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900 lg:hidden'>
         <div className='container mx-auto flex w-full max-w-7xl items-center justify-between'>
           <div className='flex items-center'>
             <Button
@@ -140,7 +140,7 @@ export const MobileMenu = () => {
       <aside
         className={`fixed left-0 top-0 z-50 mt-20 h-screen w-64 transition-transform md:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        <div className='h-full overflow-y-auto bg-white/75 px-3 py-4 shadow-sm backdrop-blur-sm dark:bg-zinc-950/75'>
+        <div className='h-full overflow-y-auto border-r border-zinc-200 bg-white px-3 py-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950'>
           <ul className='w-full space-y-4'>
             {navLinks.map((link, idx) => (
               <li key={idx}>

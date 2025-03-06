@@ -1,27 +1,31 @@
-import React from 'react'
-import { FiPlus, FiHome, FiSearch, FiBookmark } from 'react-icons/fi'
+'use client'
+
+import { LayoutGrid, Search, Bookmark, FilePlus2 } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import { buttonVariants } from '@/components/ui/button'
-import Link from 'next/link'
 
 export const LeftSidebar = () => {
   const navLinks = [
     {
       name: 'Home',
       href: '/home',
-      icon: <FiHome />
+      icon: <LayoutGrid />
     },
     {
       name: 'Explore',
       href: '/explore',
-      icon: <FiSearch />
+      icon: <Search />
     },
     {
       name: 'Bookmarks',
       href: '/bookmarks',
-      icon: <FiBookmark />
+      icon: <Bookmark />
     }
   ]
+
+  const pathname = usePathname()
 
   return (
     <div className='hidden flex-col items-end p-4 lg:flex'>
@@ -34,7 +38,7 @@ export const LeftSidebar = () => {
                 style={{
                   justifyContent: 'start'
                 }}
-                className={`${buttonVariants({ variant: 'ghost', className: 'flex w-full' })}`}
+                className={`${buttonVariants({ variant: 'ghost', className: `flex w-full ${pathname === link.href ? 'border border-zinc-200/50 bg-white shadow-sm dark:border-zinc-800/50 dark:bg-zinc-900' : ''}` })}`}
               >
                 {link.icon}
                 {link.name}
@@ -44,9 +48,9 @@ export const LeftSidebar = () => {
         </ul>
         <Link
           href={'/compose/submit'}
-          className={`${buttonVariants({ variant: 'default', className: 'flex w-full' })}`}
+          className={`${buttonVariants({ variant: 'primary', className: 'w-full' })}`}
         >
-          <FiPlus />
+          <FilePlus2 />
           Create
         </Link>
       </div>

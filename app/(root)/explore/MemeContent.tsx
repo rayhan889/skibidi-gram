@@ -17,7 +17,7 @@ export default function MemeContent({ memes }: MemeContentProps) {
         </div>
       )}
       {memes.length > 0 && (
-        <div className='-mx-3'>
+        <div>
           {memes.map((meme, index) => (
             <MemeCard key={index} data={meme} />
           ))}

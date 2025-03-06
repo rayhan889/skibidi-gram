@@ -96,7 +96,7 @@ export const MemeCard = ({ data }: { data: memeSelectSchemaType }) => {
   }
 
   return (
-    <div className='flex w-full gap-x-2 border-b border-b-zinc-200 p-3 dark:border-b-zinc-800'>
+    <div className='mb-3 flex w-full gap-x-2 rounded-md border border-zinc-200 bg-white p-3 dark:border-zinc-800 dark:bg-zinc-900'>
       <Avatar className='mt-[0.3rem]'>
         <AvatarImage src={data.user.image} />
         <AvatarFallback>{initial}</AvatarFallback>

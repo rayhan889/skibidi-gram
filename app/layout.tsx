@@ -26,7 +26,7 @@ export default function RootLayout({
     <>
       <html lang='en' suppressHydrationWarning>
         <body
-          className={`${poppins.className} min-h-screen bg-slate-50 antialiased dark:bg-zinc-900`}
+          className={`${poppins.className} min-h-screen bg-zinc-50 antialiased dark:bg-zinc-950`}
         >
           <Providers>{children}</Providers>
           <Toaster />

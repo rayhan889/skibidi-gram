@@ -51,11 +51,9 @@ export default function TopContent({ searchData }: TopContentProps) {
           </div>
         </>
       )}
-      {searchData.memes.length > 0 && searchData.users.length > 0 && (
-        <hr className='-mx-3' />
-      )}
+      {searchData.memes.length > 0 && searchData.users.length > 0 && <hr />}
       {searchData.memes.length > 0 && (
-        <div className='-mx-3'>
+        <div>
           {searchData.memes.map((meme, index) => (
             <MemeCard key={index} data={meme} />
           ))}

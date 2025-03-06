@@ -369,6 +369,7 @@ export default function MemeForm({
               disabled={
                 form.formState.isSubmitting || isLoading || isImageUploading
               }
+              variant={'primary'}
             >
               Submit
             </Button>
