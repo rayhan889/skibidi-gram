@@ -23,8 +23,6 @@ export async function POST(req: Request) {
       .where(and(eq(likes.userId, userId), eq(likes.memeId, memeId)))
       .limit(1)
 
-    console.log('first', alreadyLikeMeme)
-
     if (alreadyLikeMeme.length > 0) {
       await db
         .delete(likes)
@@ -33,15 +31,10 @@ export async function POST(req: Request) {
       await db.insert(likes).values({ memeId, userId })
     }
 
-    const likesCount = await db.$count(
-      likes,
-      eq(likes.memeId, memeId)
-    )
+    const likesCount = await db.$count(likes, eq(likes.memeId, memeId))
 
     return Response.json(likesCount, { status: 201 })
   } catch (error) {
-    console.error('Error creating meme:', error)
-
     if (error instanceof z.ZodError) {
       return Response.json(
         { error: 'Invalid input', details: error.errors },

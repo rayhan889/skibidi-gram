@@ -1,4 +1,4 @@
-import { memes, users, files as filesDb, likes } from '@/db/schema'
+import { memes, users, files as filesDb, likes, comments } from '@/db/schema'
 import { eq, desc, inArray, and, like } from 'drizzle-orm'
 import { memeInsertSchema } from '@/zod-schemas/meme'
 import { getAuthSession } from '@/lib/auth'
@@ -36,7 +36,7 @@ export async function GET(_: Request) {
     const memeIds = memeWithUsers.map(meme => meme.id)
 
     const likesCounts = await db
-      .select({memeId: likes.memeId})
+      .select({ memeId: likes.memeId })
       .from(likes)
       .where(inArray(likes.memeId, memeIds))
       .groupBy(likes.memeId, likes.userId)
@@ -51,13 +51,33 @@ export async function GET(_: Request) {
       .from(filesDb)
       .where(inArray(filesDb.memeId, memeIds))
 
-    let userLikes: {memeId: string}[] = []
+    let userLikes: { memeId: string }[] = []
     if (userId) {
       userLikes = await db
-        .select({memeId: likes.memeId})
+        .select({ memeId: likes.memeId })
         .from(likes)
         .where(and(eq(likes.userId, userId), inArray(likes.memeId, memeIds)))
     }
+
+    const commentsWithUsers = await db
+      .select({
+        id: comments.id,
+        content: comments.content,
+        createdAt: comments.createdAt,
+        user: {
+          id: users.id,
+          username: users.username,
+          fullName: users.name,
+          email: users.email,
+          image: users.image
+        },
+        memeId: comments.memeId,
+        parentId: comments.parentId
+      })
+      .from(comments)
+      .where(inArray(comments.memeId, memeIds))
+      .innerJoin(users, eq(comments.userId, users.id))
+      .orderBy(desc(comments.createdAt))
 
     const result = memeWithUsers.map(meme => ({
       ...meme,
@@ -68,6 +88,7 @@ export async function GET(_: Request) {
           fileType: file.fileType,
           path: file.path
         })),
+      comments: commentsWithUsers.filter(comment => comment.memeId === meme.id),
       likeCount: likesCounts.filter(like => like.memeId === meme.id).length,
       isLiked: userLikes.some(like => like.memeId === meme.id)
     }))

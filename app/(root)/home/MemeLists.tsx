@@ -8,7 +8,7 @@ import { MemeCard } from '@/components/MemeCard'
 
 export default function MemeLists() {
   const { data: memes, isLoading } = useQuery({
-    queryKey: ['memes'],
+    queryKey: ['memes', 'comments'],
     queryFn: async () => {
       const response = await fetch('/api/meme')
       const data: memeSelectSchemaType[] = await response.json()
