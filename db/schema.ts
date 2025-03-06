@@ -4,7 +4,9 @@ import {
   timestamp,
   text,
   integer,
-  primaryKey
+  primaryKey,
+  AnyPgColumn,
+  foreignKey
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 import crypto from 'crypto'
@@ -118,6 +120,27 @@ export const likes = pgTable(
   ]
 )
 
+export const comments = pgTable('comments', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  memeId: text('meme_id')
+    .notNull()
+    .references(() => memes.id, { onDelete: 'cascade' }),
+  parentId: text('parent_id').references((): AnyPgColumn => comments.id, {
+    onDelete: 'cascade'
+  }),
+  content: text('content').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date())
+})
+
 export const usersRelations = relations(users, ({ one, many }) => ({
   memes: many(memes),
   userExtras: one(userExtras)
@@ -153,5 +176,23 @@ export const likesRelations = relations(likes, ({ one }) => ({
   meme: one(memes, {
     fields: [likes.memeId],
     references: [memes.id]
+  })
+}))
+
+export const commentsRelations = relations(comments, ({ one, many }) => ({
+  user: one(users, {
+    fields: [comments.userId],
+    references: [users.id]
+  }),
+  meme: one(memes, {
+    fields: [comments.memeId],
+    references: [memes.id]
+  }),
+  parent: one(comments, {
+    fields: [comments.parentId],
+    references: [comments.id]
+  }),
+  replies: many(comments, {
+    relationName: 'comment_replies'
   })
 }))

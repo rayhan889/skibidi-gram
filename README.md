@@ -55,6 +55,7 @@ sleek and seamless user experience.
 - [x] Top, people, memes tabs on search page.
 - [x] Like system. (still got an UI issue when liking from explore page and then
       immediately going back to home)
+- [x] Comment system. (reply mechanism still don't work, working on it)
 - [ ] Edit user profile.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with

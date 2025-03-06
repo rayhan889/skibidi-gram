@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { commentSelectSchema } from './comment'
 
 export const memeInsertSchema = z.object({
   title: z.string().min(1).max(100),
@@ -31,7 +32,8 @@ export const memeSelectSchema = z.object({
     fullName: z.string(),
     email: z.string().email(),
     image: z.string()
-  })
+  }),
+  comments: z.array(commentSelectSchema).nullable()
 })
 
 export const likeInsertSchema = z.object({
